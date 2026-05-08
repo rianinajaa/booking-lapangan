@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa Password — BookLap</title>
+    <title>Verifikasi OTP — BookLap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -23,7 +23,7 @@
         .btn-masuk:active { transform: scale(0.99); }
         @keyframes fadeIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
         .fade-in { animation: fadeIn 0.5s cubic-bezier(.22,.68,0,1.1) both; }
-        .d1{animation-delay:.05s} .d2{animation-delay:.10s} .d3{animation-delay:.15s} .d4{animation-delay:.20s}
+        .d1{animation-delay:.05s} .d2{animation-delay:.10s} .d3{animation-delay:.15s} .d4{animation-delay:.20s} .d5{animation-delay:.25s}
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         @media (max-width: 640px) { .panel-right { width: 100%; border-left: none; padding: 36px 24px; } .panel-left { display: none; } }
     </style>
@@ -44,13 +44,13 @@
         <div class="fade-in d2" style="padding-bottom:60px;">
             <p style="color:#4ade80;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
                 <span style="width:8px;height:8px;background:#4ade80;border-radius:50%;display:inline-block;animation:pulse 2s infinite;"></span>
-                Reset Password
+                Verifikasi OTP
             </p>
             <h1 style="color:white;font-size:clamp(2.2rem,3.5vw,3.2rem);font-weight:900;line-height:1.12;margin-bottom:20px;">
-                Lupa <span style="color:#4ade80;">Password</span>?<br>Tenang aja.
+                Cek <span style="color:#4ade80;">Email</span><br>Kamu Sekarang.
             </h1>
             <p style="color:rgba(255,255,255,0.45);font-size:14px;line-height:1.75;max-width:360px;">
-                Masukkan email kamu dan kami akan mengirimkan kode OTP untuk membuat password baru.
+                Kode OTP sudah dikirim. Masukkan kode tersebut untuk melanjutkan proses reset password.
             </p>
         </div>
     </div>
@@ -58,38 +58,76 @@
     <div class="panel-right">
         <div class="fade-in">
             <p style="color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:6px;">BookLap</p>
-            <h2 style="color:white;font-size:24px;font-weight:800;line-height:1.25;">Lupa Password 🔐</h2>
-            <p style="color:rgba(255,255,255,0.45);font-size:13px;margin-top:8px;margin-bottom:28px;line-height:1.6;">
-                Masukkan email yang terdaftar. Kami akan kirim kode OTP untuk reset password.
+            <h2 style="color:white;font-size:24px;font-weight:800;line-height:1.25;">Masukkan Kode OTP 📩</h2>
+            <p style="color:rgba(255,255,255,0.45);font-size:13px;margin-top:8px;margin-bottom:24px;line-height:1.6;">
+                Kode OTP dikirim ke <span style="color:#4ade80;font-weight:700;">{{ session('reset_email') }}</span>.
             </p>
         </div>
 
-        <form method="POST" action="{{ route('password.send-otp') }}">
-            @csrf
+        @if(session('resent'))
+            <div class="fade-in" style="margin-bottom:16px;padding:11px 14px;background:rgba(74,222,128,0.10);border:1px solid rgba(74,222,128,0.25);border-radius:10px;">
+                <p style="color:#4ade80;font-size:12px;">✅ {{ session('resent') }}</p>
+            </div>
+        @endif
 
-            <div class="fade-in d1" style="margin-bottom:20px;">
-                <label>Email Terdaftar</label>
-                <input type="email" name="email" value="{{ old('email') }}"
-                    class="input-glass {{ $errors->has('email') ? 'err' : '' }}"
-                    placeholder="nama@email.com" required autofocus/>
-                @error('email')
+        <form method="POST" action="{{ route('password.otp.verify') }}">
+            @csrf
+            <div class="fade-in d1" style="margin-bottom:24px;">
+                <label>Kode OTP</label>
+                <input type="text" name="otp" maxlength="6"
+                    class="input-glass {{ $errors->has('otp') ? 'err' : '' }}"
+                    style="text-align:center;font-size:26px;font-weight:800;letter-spacing:12px;padding:16px;"
+                    placeholder="••••••" autofocus required inputmode="numeric" autocomplete="one-time-code"/>
+                @error('otp')
                     <p style="color:#f87171;font-size:12px;margin-top:5px;">{{ $message }}</p>
                 @enderror
             </div>
-
             <div class="fade-in d2">
-                <button type="submit" class="btn-masuk">Kirim Kode OTP →</button>
+                <button type="submit" class="btn-masuk">Verifikasi →</button>
             </div>
         </form>
 
-        <p class="fade-in d3" style="text-align:center;font-size:14px;color:rgba(255,255,255,0.4);margin-top:24px;">
-            Ingat password?
-            <a href="{{ route('login') }}" style="color:#4ade80;font-weight:700;text-decoration:none;">Masuk di sini</a>
+        <form method="POST" action="{{ route('password.resend') }}">
+            @csrf
+            <div class="fade-in d3" style="margin-top:16px;text-align:center;">
+                <p style="color:rgba(255,255,255,0.4);font-size:13px;">
+                    Tidak dapat kode?
+                    <button type="submit" id="resend-btn" disabled
+                        style="background:none;border:none;font-size:13px;cursor:not-allowed;font-family:inherit;">
+                        <span id="resend-label" style="color:rgba(255,255,255,0.25);font-weight:700;">
+                            Kirim ulang (<span id="resend-countdown">30</span>s)
+                        </span>
+                    </button>
+                </p>
+            </div>
+        </form>
+
+        <p class="fade-in d4" style="text-align:center;font-size:14px;color:rgba(255,255,255,0.4);margin-top:20px;">
+            Salah email?
+            <a href="{{ route('password.request') }}" style="color:#4ade80;font-weight:700;text-decoration:none;">Ulangi</a>
         </p>
 
-        <p class="fade-in d4" style="text-align:center;font-size:11.5px;color:rgba(255,255,255,0.18);margin-top:28px;">
+        <p class="fade-in d5" style="text-align:center;font-size:11.5px;color:rgba(255,255,255,0.18);margin-top:28px;">
             &copy; {{ date('Y') }} BookLap Management System.
         </p>
     </div>
+
+    <script>
+        let sisa = 30;
+        const btn = document.getElementById('resend-btn');
+        const label = document.getElementById('resend-label');
+        const countEl = document.getElementById('resend-countdown');
+        const interval = setInterval(() => {
+            sisa--;
+            if (countEl) countEl.textContent = sisa;
+            if (sisa <= 0) {
+                clearInterval(interval);
+                btn.disabled = false;
+                btn.style.cursor = 'pointer';
+                label.style.color = '#4ade80';
+                label.innerHTML = 'Kirim ulang OTP';
+            }
+        }, 1000);
+    </script>
 </body>
 </html>

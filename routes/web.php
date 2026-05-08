@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\ForgotPasswordOtpController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Route;
 
-
-Route::get('/auth/google',          [GoogleController::class, 'redirect'])->name('auth.google');
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 
 // ─── Halaman utama redirect ke login ───────────────────────────────────────
@@ -41,9 +41,21 @@ Route::middleware(['auth', 'role:user'])
         Route::get('/dashboard', [DashboardController::class, 'user'])->name('dashboard');
     });
 
-    Route::get('/register/verify',  [RegisteredUserController::class, 'showOtpForm'])->name('register.otp.form');
+Route::get('/register/verify', [RegisteredUserController::class, 'showOtpForm'])->name('register.otp.form');
 Route::post('/register/verify', [RegisteredUserController::class, 'verifyOtp'])->name('register.otp.verify');
 Route::post('/register/resend', [RegisteredUserController::class, 'resendOtp'])->name('register.resend');
 Route::get('/register/verified', function () {
     return view('auth.verified-popup');
 })->middleware('auth')->name('register.verified');
+
+Route::get('/forgot-password', [ForgotPasswordOtpController::class, 'showEmailForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordOtpController::class, 'sendOtp'])->name('password.send-otp');
+Route::get('/forgot-password/otp', [ForgotPasswordOtpController::class, 'showOtpForm'])->name('password.otp.form');
+Route::post('/forgot-password/otp', [ForgotPasswordOtpController::class, 'verifyOtp'])->name('password.otp.verify');
+Route::get('/forgot-password/new', [ForgotPasswordOtpController::class, 'showNewPasswordForm'])->name('password.new.form');
+Route::post('/forgot-password/new', [ForgotPasswordOtpController::class, 'updatePassword'])->name('password.update');
+Route::post('/forgot-password/resend', [ForgotPasswordOtpController::class, 'resendOtp'])->name('password.resend');
+
+Route::get('/password-changed', function () {
+    return view('auth.password-changed');
+})->name('password.changed');

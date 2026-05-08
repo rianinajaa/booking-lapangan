@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa Password — BookLap</title>
+    <title>Password Baru — BookLap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -23,7 +23,7 @@
         .btn-masuk:active { transform: scale(0.99); }
         @keyframes fadeIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
         .fade-in { animation: fadeIn 0.5s cubic-bezier(.22,.68,0,1.1) both; }
-        .d1{animation-delay:.05s} .d2{animation-delay:.10s} .d3{animation-delay:.15s} .d4{animation-delay:.20s}
+        .d1{animation-delay:.05s} .d2{animation-delay:.10s} .d3{animation-delay:.15s} .d4{animation-delay:.20s} .d5{animation-delay:.25s}
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         @media (max-width: 640px) { .panel-right { width: 100%; border-left: none; padding: 36px 24px; } .panel-left { display: none; } }
     </style>
@@ -44,13 +44,13 @@
         <div class="fade-in d2" style="padding-bottom:60px;">
             <p style="color:#4ade80;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
                 <span style="width:8px;height:8px;background:#4ade80;border-radius:50%;display:inline-block;animation:pulse 2s infinite;"></span>
-                Reset Password
+                Password Baru
             </p>
             <h1 style="color:white;font-size:clamp(2.2rem,3.5vw,3.2rem);font-weight:900;line-height:1.12;margin-bottom:20px;">
-                Lupa <span style="color:#4ade80;">Password</span>?<br>Tenang aja.
+                Buat <span style="color:#4ade80;">Password</span><br>Yang Kuat.
             </h1>
             <p style="color:rgba(255,255,255,0.45);font-size:14px;line-height:1.75;max-width:360px;">
-                Masukkan email kamu dan kami akan mengirimkan kode OTP untuk membuat password baru.
+                Gunakan kombinasi huruf besar, huruf kecil, angka, dan simbol untuk password yang lebih aman.
             </p>
         </div>
     </div>
@@ -58,38 +58,68 @@
     <div class="panel-right">
         <div class="fade-in">
             <p style="color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:6px;">BookLap</p>
-            <h2 style="color:white;font-size:24px;font-weight:800;line-height:1.25;">Lupa Password 🔐</h2>
+            <h2 style="color:white;font-size:24px;font-weight:800;line-height:1.25;">Buat Password Baru 🔑</h2>
             <p style="color:rgba(255,255,255,0.45);font-size:13px;margin-top:8px;margin-bottom:28px;line-height:1.6;">
-                Masukkan email yang terdaftar. Kami akan kirim kode OTP untuk reset password.
+                Masukkan password baru untuk akun <span style="color:#4ade80;font-weight:700;">{{ session('reset_email') }}</span>.
             </p>
         </div>
 
-        <form method="POST" action="{{ route('password.send-otp') }}">
+        <form method="POST" action="{{ route('password.update') }}">
             @csrf
 
-            <div class="fade-in d1" style="margin-bottom:20px;">
-                <label>Email Terdaftar</label>
-                <input type="email" name="email" value="{{ old('email') }}"
-                    class="input-glass {{ $errors->has('email') ? 'err' : '' }}"
-                    placeholder="nama@email.com" required autofocus/>
-                @error('email')
+            {{-- Password Baru --}}
+            <div class="fade-in d1" style="margin-bottom:16px;">
+                <label>Password Baru</label>
+                <div style="position:relative;">
+                    <input type="password" name="password" id="pwd1"
+                        class="input-glass {{ $errors->has('password') ? 'err' : '' }}"
+                        style="padding-right:44px;" placeholder="Minimal 8 karakter" required/>
+                    <button type="button" onclick="togglePwd('pwd1','es1','eh1')"
+                        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.35);display:flex;align-items:center;">
+                        <svg id="es1" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        <svg id="eh1" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                    </button>
+                </div>
+                @error('password')
                     <p style="color:#f87171;font-size:12px;margin-top:5px;">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="fade-in d2">
-                <button type="submit" class="btn-masuk">Kirim Kode OTP →</button>
+            {{-- Konfirmasi Password --}}
+            <div class="fade-in d2" style="margin-bottom:24px;">
+                <label>Konfirmasi Password</label>
+                <div style="position:relative;">
+                    <input type="password" name="password_confirmation" id="pwd2"
+                        class="input-glass"
+                        style="padding-right:44px;" placeholder="Ulangi password baru" required/>
+                    <button type="button" onclick="togglePwd('pwd2','es2','eh2')"
+                        style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.35);display:flex;align-items:center;">
+                        <svg id="es2" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        <svg id="eh2" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="fade-in d3">
+                <button type="submit" class="btn-masuk">Simpan Password Baru →</button>
             </div>
         </form>
-
-        <p class="fade-in d3" style="text-align:center;font-size:14px;color:rgba(255,255,255,0.4);margin-top:24px;">
-            Ingat password?
-            <a href="{{ route('login') }}" style="color:#4ade80;font-weight:700;text-decoration:none;">Masuk di sini</a>
-        </p>
 
         <p class="fade-in d4" style="text-align:center;font-size:11.5px;color:rgba(255,255,255,0.18);margin-top:28px;">
             &copy; {{ date('Y') }} BookLap Management System.
         </p>
     </div>
+
+    <script>
+        function togglePwd(inp, showId, hideId) {
+            const i = document.getElementById(inp);
+            const s = document.getElementById(showId);
+            const h = document.getElementById(hideId);
+            const isPass = i.type === 'password';
+            i.type = isPass ? 'text' : 'password';
+            s.style.display = isPass ? 'none' : 'block';
+            h.style.display = isPass ? 'block' : 'none';
+        }
+    </script>
 </body>
 </html>

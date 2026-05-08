@@ -121,37 +121,25 @@ class RegisteredUserController extends Controller
         return redirect()->route('register.verified');
     }
 
-    public function resendOtp(): RedirectResponse
-    {
-        $email = session('otp_email');
+  public function resendOtp(): RedirectResponse
+{
+    $email = session('otp_email');
 
-        if (! $email) {
-            return redirect()->route('register');
-        }
-
-        // Cek cooldown 30 detik
-        $lastOtp = OtpCode::where('email', $email)->first();
-        if ($lastOtp) {
-            $createdAt = Carbon::parse($lastOtp->created_at)->setTimezone(config('app.timezone'));
-            $secondsAgo = (int) $createdAt->diffInSeconds(now());
-            if ($secondsAgo < 30) {
-                $sisaDetik = 30 - $secondsAgo;
-
-                return back()->with('cooldown', $sisaDetik);
-            }
-        }
-
-        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
-        OtpCode::where('email', $email)->delete();
-        OtpCode::create([
-            'email' => $email,
-            'code' => $otp,
-            'expires_at' => now()->addMinutes(5),
-        ]);
-
-        Mail::to($email)->send(new OtpMail($otp));
-
-        return back()->with('resent', 'Kode OTP baru telah dikirim ke email kamu.');
+    if (!$email) {
+        return redirect()->route('register');
     }
+
+    $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+    OtpCode::where('email', $email)->delete();
+    OtpCode::create([
+        'email'      => $email,
+        'code'       => $otp,
+        'expires_at' => now()->addMinutes(5),
+    ]);
+
+    Mail::to($email)->send(new OtpMail($otp));
+
+    return back()->with('resent', 'Kode OTP baru telah dikirim ke email kamu.');
+}
 }

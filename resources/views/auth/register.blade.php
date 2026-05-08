@@ -137,7 +137,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                 </div>
-                <span style="color:white;font-weight:900;font-size:18px;letter-spacing:0.15em;text-transform:uppercase;">BookLap</span>
+                <span style="color:white;font-weight:900;font-size:18px;letter-spacing:0.15em;text-transform:uppercase;">SpaceGo</span>
             </div>
         </div>
         <div class="fade-in d2" style="padding-bottom:60px;">
@@ -159,7 +159,7 @@
     <div class="panel-right">
 
         <div class="fade-in">
-            <p style="color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:6px;">BookLap</p>
+            <p style="color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:6px;">SpaceGo</p>
             <h2 style="color:white;font-size:24px;font-weight:800;line-height:1.25;">Buat Akun Baru ✨</h2>
             <p style="color:rgba(255,255,255,0.45);font-size:13px;margin-top:8px;margin-bottom:24px;line-height:1.6;">
                 Isi data di bawah untuk mendaftar sebagai User.
@@ -276,7 +276,7 @@
         </p>
 
         <p class="fade-in d9" style="text-align:center;font-size:11.5px;color:rgba(255,255,255,0.18);margin-top:28px;">
-            &copy; {{ date('Y') }} BookLap Management System.
+            &copy; {{ date('Y') }} SpaceGo Management System.
         </p>
     </div>
 

@@ -304,33 +304,46 @@
         </form>
 
         {{-- Kirim ulang OTP --}}
-        <form method="POST" action="{{ route('register.resend') }}">
-            @csrf
-            <div class="fade-in d3" style="margin-top:16px;text-align:center;">
+<form method="POST" action="{{ route('register.resend') }}" id="resend-form">
+    @csrf
+    <div class="fade-in d3" style="margin-top:16px;text-align:center;">
 
-                @if (session('cooldown'))
-                    <p style="color:rgba(255,255,255,0.4);font-size:13px;">
-                        Tunggu <span id="cooldown-timer"
-                            style="color:#f87171;font-weight:700;">{{ session('cooldown') }}</span> detik sebelum kirim
-                        ulang.
-                    </p>
-                @elseif(session('resent'))
-                    <p style="color:#4ade80;font-size:13px;margin-bottom:8px;">✅ {{ session('resent') }}</p>
-                    <button type="submit"
-                        style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:13px;cursor:pointer;line-height:1.6;">
-                        Tidak dapat kode?
-                        <span style="color:#4ade80;font-weight:700;">Kirim ulang OTP</span>
-                    </button>
-                @else
-                    <button type="submit" id="resend-btn"
-                        style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:13px;cursor:pointer;line-height:1.6;">
-                        Tidak dapat kode?
-                        <span style="color:#4ade80;font-weight:700;">Kirim ulang OTP</span>
-                    </button>
-                @endif
+        @if(session('resent'))
+            <p style="color:#4ade80;font-size:13px;margin-bottom:8px;">✅ {{ session('resent') }}</p>
+        @endif
 
-            </div>
-        </form>
+        <p style="color:rgba(255,255,255,0.4);font-size:13px;">
+            Tidak dapat kode?
+            <button type="submit" id="resend-btn" disabled
+                style="background:none;border:none;font-size:13px;cursor:not-allowed;font-family:inherit;">
+                <span id="resend-label" style="color:rgba(255,255,255,0.25);font-weight:700;">
+                    Kirim ulang (<span id="resend-countdown">30</span>s)
+                </span>
+            </button>
+        </p>
+
+    </div>
+</form>
+
+<script>
+    let sisa = 30;
+    const btn = document.getElementById('resend-btn');
+    const label = document.getElementById('resend-label');
+    const countEl = document.getElementById('resend-countdown');
+
+    const interval = setInterval(() => {
+        sisa--;
+        if (countEl) countEl.textContent = sisa;
+
+        if (sisa <= 0) {
+            clearInterval(interval);
+            btn.disabled = false;
+            btn.style.cursor = 'pointer';
+            label.style.color = '#4ade80';
+            label.innerHTML = 'Kirim ulang OTP';
+        }
+    }, 1000);
+</script>J
 
         @if (session('cooldown'))
             <script>
