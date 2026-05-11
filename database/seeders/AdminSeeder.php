@@ -27,10 +27,10 @@ class AdminSeeder extends Seeder
         ]);
 
         User::create([
-            'name'     => 'User Test',
+            'name'     => 'Umum Test',
             'email'    => 'user@booking.com',
-            'password' => bcrypt('user123'),
-            'role'     => 'user',
+            'password' => bcrypt('umum123'),
+            'role'     => 'umum',
         ]);
     }
 }

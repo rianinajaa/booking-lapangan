@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
+// ─── Google OAuth ───────────────────────────────────────────────────────────
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
 
@@ -33,14 +34,15 @@ Route::middleware(['auth', 'role:guru'])
         Route::get('/dashboard', [DashboardController::class, 'guru'])->name('dashboard');
     });
 
-// ─── User ───────────────────────────────────────────────────────────────────
-Route::middleware(['auth', 'role:user'])
+// ─── User (umum, siswa_internal, siswa_luar) ────────────────────────────────
+Route::middleware(['auth', 'role:umum,siswa_internal,siswa_luar'])
     ->prefix('user')
     ->name('user.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'user'])->name('dashboard');
     });
 
+// ─── Verifikasi OTP Register ────────────────────────────────────────────────
 Route::get('/register/verify', [RegisteredUserController::class, 'showOtpForm'])->name('register.otp.form');
 Route::post('/register/verify', [RegisteredUserController::class, 'verifyOtp'])->name('register.otp.verify');
 Route::post('/register/resend', [RegisteredUserController::class, 'resendOtp'])->name('register.resend');
@@ -48,6 +50,7 @@ Route::get('/register/verified', function () {
     return view('auth.verified-popup');
 })->middleware('auth')->name('register.verified');
 
+// ─── Lupa Password (OTP) ────────────────────────────────────────────────────
 Route::get('/forgot-password', [ForgotPasswordOtpController::class, 'showEmailForm'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordOtpController::class, 'sendOtp'])->name('password.send-otp');
 Route::get('/forgot-password/otp', [ForgotPasswordOtpController::class, 'showOtpForm'])->name('password.otp.form');

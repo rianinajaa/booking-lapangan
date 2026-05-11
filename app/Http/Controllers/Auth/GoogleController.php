@@ -33,7 +33,7 @@ class GoogleController extends Controller
                     'google_id' => $googleUser->getId(),
                     'avatar'    => $googleUser->getAvatar(),
                     'password'  => null,
-                    'role'      => 'user',
+                    'role'      => 'umum',
                 ]);
             }
 
