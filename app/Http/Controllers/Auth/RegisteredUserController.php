@@ -107,7 +107,7 @@ class RegisteredUserController extends Controller
             'name' => session('otp_name'),
             'email' => $email,
             'password' => session('otp_password'),
-            'role' => 'user',
+            'role' => 'umum',
         ]);
 
         event(new Registered($user));
