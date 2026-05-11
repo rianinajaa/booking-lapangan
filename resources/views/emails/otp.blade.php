@@ -276,22 +276,21 @@
 </head>
 
 <body>
-    <div class="wrapper">
-
         {{-- Header --}}
-        <div class="header">
-            <div class="logo-wrap">
-                <div class="logo-icon">
-                    <svg width="18" height="18" fill="none" stroke="#14532d" stroke-width="2.5"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <span class="logo-text">SpaceGo</span>
-            </div>
-            <div><span class="header-tag">✦ Verifikasi Email</span></div>
-        </div>
+    <div class="header">
+    <div class="logo-wrap">
+
+        <img src="https://i.imgur.com/zULRtG3.png/logo2.png"
+             alt="Logo SpaceGo"
+             style="width:38px; height:38px; object-fit:contain; vertical-align:middle;">
+
+        <span class="logo-text">SpaceGo</span>
+    </div>
+
+    <div>
+        <span class="header-tag">✦ Verifikasi Email</span>
+    </div>
+</div>
 
         {{-- Body --}}
         <div class="body">
@@ -309,7 +308,7 @@
                 <p class="otp-label">Masukkan kode ini di halaman verifikasi</p>
                 <div class="otp-code">{{ $otp }}</div>
                 <div class="otp-timer">
-                    ⏱ Berlaku selama <strong>5 menit</strong>
+                    ⏱ Berlaku selama <strong> 5 menit</strong>
                 </div>
             </div>
 
@@ -334,7 +333,7 @@
 
             {{-- Warning --}}
             <div class="warning">
-                ⚠️ Jika kamu tidak merasa mendaftar di BookLap, abaikan email ini. Akun tidak akan dibuat tanpa
+                ⚠️ Jika kamu tidak merasa mendaftar di SpaceGo, abaikan email ini. Akun tidak akan dibuat tanpa
                 verifikasi.
             </div>
 
@@ -348,7 +347,7 @@
                 <a href="#">Syarat & Ketentuan</a>
             </div>
             <p class="footer-copy">
-                &copy; {{ date('Y') }} <span>BookLap</span> Management System. All rights reserved.
+                &copy; {{ date('Y') }} <span>SpaceGo</span> Management System. All rights reserved.
             </p>
         </div>
 

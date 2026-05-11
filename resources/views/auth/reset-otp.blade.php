@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi OTP — BookLap</title>
+    <title>Verifikasi OTP — SpaceGo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -38,7 +38,7 @@
                 <div style="width:36px;height:36px;background:#4ade80;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(74,222,128,0.35);">
                     <svg width="18" height="18" fill="none" stroke="#14532d" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>
-                <span style="color:white;font-weight:900;font-size:18px;letter-spacing:0.15em;text-transform:uppercase;">BookLap</span>
+                <span style="color:white;font-weight:900;font-size:18px;letter-spacing:0.15em;text-transform:uppercase;">SpaceGo</span>
             </div>
         </div>
         <div class="fade-in d2" style="padding-bottom:60px;">
@@ -57,7 +57,7 @@
 
     <div class="panel-right">
         <div class="fade-in">
-            <p style="color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:6px;">BookLap</p>
+            <p style="color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:6px;">SpaceGo</p>
             <h2 style="color:white;font-size:24px;font-weight:800;line-height:1.25;">Masukkan Kode OTP 📩</h2>
             <p style="color:rgba(255,255,255,0.45);font-size:13px;margin-top:8px;margin-bottom:24px;line-height:1.6;">
                 Kode OTP dikirim ke <span style="color:#4ade80;font-weight:700;">{{ session('reset_email') }}</span>.
@@ -108,7 +108,7 @@
         </p>
 
         <p class="fade-in d5" style="text-align:center;font-size:11.5px;color:rgba(255,255,255,0.18);margin-top:28px;">
-            &copy; {{ date('Y') }} BookLap Management System.
+            &copy; {{ date('Y') }} SpaceGo Management System.
         </p>
     </div>
 
