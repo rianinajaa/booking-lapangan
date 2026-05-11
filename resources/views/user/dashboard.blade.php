@@ -38,12 +38,12 @@
 
         {{-- Text --}}
         <p style="color:rgba(255,255,255,0.35);font-size:11px;font-weight:700;text-transform:uppercase;
-                  letter-spacing:0.18em;margin-bottom:8px;">BookLap</p>
+                  letter-spacing:0.18em;margin-bottom:8px;">SpaceGo</p>
         <h2 style="color:white;font-size:22px;font-weight:800;line-height:1.3;margin-bottom:10px;">
             Email Terverifikasi! 🎉
         </h2>
         <p style="color:rgba(255,255,255,0.5);font-size:13.5px;line-height:1.7;margin-bottom:28px;">
-            Selamat datang di BookLap! Akun kamu berhasil dibuat dan email kamu telah terverifikasi.
+            Selamat datang di SpaceGo! Akun kamu berhasil dibuat dan email kamu telah terverifikasi.
         </p>
 
         {{-- Button --}}

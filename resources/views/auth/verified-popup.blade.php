@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi Berhasil — BookLap</title>
+    <title>Verifikasi Berhasil — SpaceGo</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
@@ -161,14 +161,14 @@
         </div>
 
         {{-- Label --}}
-        <p class="label">✦ BookLap</p>
+        <p class="label">✦ SpaceGo</p>
 
         {{-- Title --}}
         <h1 class="title">Email <span>Terverifikasi</span><br>Berhasil! 🎉</h1>
 
         {{-- Desc --}}
         <p class="desc">
-            Selamat datang di BookLap!<br>
+            Selamat datang di SpaceGo!<br>
             Akun kamu sudah aktif dan siap digunakan<br>
             untuk booking lapangan favoritmu.
         </p>

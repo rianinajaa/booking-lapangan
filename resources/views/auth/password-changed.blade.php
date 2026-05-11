@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Berhasil Diubah — BookLap</title>
+    <title>Password Berhasil Diubah — SpaceGo</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,7 +38,7 @@
             </svg>
         </div>
 
-        <p class="label">✦ BookLap</p>
+        <p class="label">✦ SpaceGo</p>
 
         <h1 class="title">Password <span>Berhasil</span><br>Diubah! 🔑</h1>
 

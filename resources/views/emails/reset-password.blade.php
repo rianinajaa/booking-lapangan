@@ -46,18 +46,18 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
             </div>
-            <span class="logo-text">BookLap</span>
+            <span class="logo-text">SpaceGo</span>
         </div>
         <div><span class="header-tag">🔐 Reset Password</span></div>
     </div>
     <div class="body">
         <h2 class="greeting">Permintaan reset<br><span>password</span> diterima.</h2>
-        <p class="sub">Kami menerima permintaan reset password untuk akun BookLap kamu. Gunakan kode OTP di bawah ini untuk membuat password baru.</p>
+        <p class="sub">Kami menerima permintaan reset password untuk akun SpaceGo kamu. Gunakan kode OTP di bawah ini untuk membuat password baru.</p>
         <div class="divider"><span>Kode OTP Reset Password</span></div>
         <div class="otp-section">
             <p class="otp-label">Masukkan kode ini di halaman reset password</p>
             <div class="otp-code">{{ $otp }}</div>
-            <div class="otp-timer">⏱ Berlaku selama <strong>5 menit</strong></div>
+            <div class="otp-timer">⏱ Berlaku selama <strong> 5 menit</strong></div>
         </div>
         <div class="info-grid">
             <div class="info-card">
@@ -84,7 +84,7 @@
             <a href="#">Kebijakan Privasi</a>
             <a href="#">Syarat & Ketentuan</a>
         </div>
-        <p class="footer-copy">&copy; {{ date('Y') }} <span>BookLap</span> Management System. All rights reserved.</p>
+        <p class="footer-copy">&copy; {{ date('Y') }} <span>SpaceGo</span> Management System. All rights reserved.</p>
     </div>
 </div>
 </body>
