@@ -121,6 +121,46 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.4; }
         }
+
+        /* ── OTP Toast ── */
+        #otp-toast {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: rgba(20, 83, 45, 0.55);
+            border: 1px solid rgba(74, 222, 128, 0.40);
+            color: #86efac;
+            font-size: 13.5px;
+            font-weight: 600;
+            padding: 12px 22px;
+            border-radius: 12px;
+            z-index: 9999;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.35s ease, transform 0.35s cubic-bezier(.22,.68,0,1.1);
+        }
+        #otp-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        #otp-toast.hide {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-8px);
+        }
+        #otp-toast .toast-dot {
+            width: 7px;
+            height: 7px;
+            background: #4ade80;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -128,16 +168,18 @@
     <div class="bg-lapangan"></div>
     <div class="bg-overlay"></div>
 
+    {{-- OTP Toast Notification --}}
+    <div id="otp-toast" role="alert" aria-live="polite">
+        <span class="toast-dot"></span>
+        Kode OTP baru telah dikirim ke email kamu.
+    </div>
+
     {{-- Branding kiri --}}
     <div class="panel-left">
         <div class="fade-in">
-            <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;background:#4ade80;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(74,222,128,0.35);">
-                    <svg width="18" height="18" fill="none" stroke="#14532d" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <span style="color:white;font-weight:900;font-size:18px;letter-spacing:0.15em;text-transform:uppercase;">SpaceGo</span>
+            <div style="display:flex;align-items:center;margin-top:-74px;margin-left:-34px;">
+                <img src="{{ asset('images/spacego_logo.png') }}" alt="SpaceGo"
+                    style="height:190px;width:auto;object-fit:contain;">
             </div>
         </div>
         <div class="fade-in d2" style="padding-bottom:60px;">
@@ -254,7 +296,7 @@
             <div class="fade-in d5" style="margin-bottom:18px;padding:11px 14px;background:rgba(251,191,36,0.10);border:1px solid rgba(251,191,36,0.20);border-radius:10px;">
                 <p style="color:rgba(253,224,71,0.85);font-size:12px;line-height:1.6;">
                     ℹ️ Daftar mandiri hanya untuk <strong>User</strong>.
-                    Akun <strong>Guru</strong> & <strong>Admin</strong> dibuat oleh Admin sistem.
+                     <strong> & </strong>Pastikan Email Aktif Untuk Meminta<strong> Kode Verifikasi‼️</strong>
                 </p>
             </div>
 
@@ -281,6 +323,7 @@
     </div>
 
     <script>
+        /* ── Toggle password visibility ── */
         function togglePwd(inp, showId, hideId) {
             const i = document.getElementById(inp);
             const s = document.getElementById(showId);
@@ -290,6 +333,39 @@
             s.style.display = isPass ? 'none' : 'block';
             h.style.display = isPass ? 'block' : 'none';
         }
+
+        /* ── OTP Toast ── */
+        let _otpTimer = null;
+
+        function showOtpToast() {
+            const toast = document.getElementById('otp-toast');
+
+            // Reset timer jika toast sudah muncul
+            if (_otpTimer) {
+                clearTimeout(_otpTimer);
+                _otpTimer = null;
+            }
+
+            // Paksa reflow agar transisi berjalan ulang
+            toast.classList.remove('show', 'hide');
+            void toast.offsetWidth;
+
+            toast.classList.add('show');
+
+            // Hilang setelah 3 detik
+            _otpTimer = setTimeout(function () {
+                toast.classList.remove('show');
+                toast.classList.add('hide');
+                _otpTimer = null;
+            }, 3000);
+        }
+
+        /* ── Tampilkan toast otomatis jika ada session flash dari Laravel ── */
+        @if(session('otp_sent'))
+            document.addEventListener('DOMContentLoaded', function () {
+                showOtpToast();
+            });
+        @endif
     </script>
 </body>
 </html>
