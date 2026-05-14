@@ -10,21 +10,18 @@ class Jadwal extends Model
 
     protected $fillable = [
         'fasilitas_id',
-        'tanggal',
-        'jam_mulai',
-        'jam_selesai',
-        'status',
+        'jam_buka',
+        'jam_tutup',
+        'is_libur',
     ];
 
-    // Relasi: jadwal milik satu fasilitas
+    protected $casts = [
+        'is_libur' => 'boolean',
+    ];
+
+    // Relasi: jadwal operasional milik satu fasilitas
     public function fasilitas()
     {
         return $this->belongsTo(Fasilitas::class);
-    }
-
-    // Relasi: jadwal punya banyak detail booking
-    public function detailBooking()
-    {
-        return $this->hasMany(DetailBooking::class);
     }
 }

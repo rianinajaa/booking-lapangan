@@ -10,9 +10,17 @@ class DetailBooking extends Model
 
     protected $fillable = [
         'booking_id',
-        'jadwal_id',
+        'fasilitas_id',
+        'tanggal',
+        'jam_mulai',
+        'jam_selesai',
         'durasi_jam',
         'subtotal',
+    ];
+
+    protected $casts = [
+        'tanggal'   => 'date',
+        'durasi_jam'=> 'decimal:1',
     ];
 
     // Relasi: detail booking milik satu booking
@@ -21,9 +29,9 @@ class DetailBooking extends Model
         return $this->belongsTo(Booking::class);
     }
 
-    // Relasi: detail booking mengacu ke satu jadwal
-    public function jadwal()
+    // Relasi: detail booking mengacu ke satu fasilitas
+    public function fasilitas()
     {
-        return $this->belongsTo(Jadwal::class);
+        return $this->belongsTo(Fasilitas::class);
     }
 }

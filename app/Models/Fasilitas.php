@@ -17,9 +17,15 @@ class Fasilitas extends Model
         'status',
     ];
 
-    // Relasi: fasilitas punya banyak jadwal
+    // Relasi: fasilitas punya satu jadwal operasional
     public function jadwal()
     {
-        return $this->hasMany(Jadwal::class);
+        return $this->hasOne(Jadwal::class);
+    }
+
+    // Relasi: fasilitas punya banyak detail booking
+    public function detailBookings()
+    {
+        return $this->hasMany(DetailBooking::class);
     }
 }
