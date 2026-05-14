@@ -11,12 +11,11 @@ return new class extends Migration
         Schema::create('jadwal', function (Blueprint $table) {
             $table->id();
             $table->foreignId('fasilitas_id')
-                  ->constrained('fasilitas')
-                  ->cascadeOnDelete();
-            $table->date('tanggal');
-            $table->time('jam_mulai');
-            $table->time('jam_selesai');
-            $table->enum('status', ['tersedia', 'dipesan'])->default('tersedia');
+                ->constrained('fasilitas')
+                ->cascadeOnDelete();
+            $table->time('jam_buka')->default('08:00');
+            $table->time('jam_tutup')->default('21:00');
+            $table->boolean('is_libur')->default(false);
             $table->timestamps();
         });
     }

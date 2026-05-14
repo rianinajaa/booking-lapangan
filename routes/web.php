@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\FasilitasController;
+use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Auth\ForgotPasswordOtpController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -24,6 +26,23 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+
+      Route::resource('fasilitas', FasilitasController::class)
+    ->parameters(['fasilitas' => 'fasilitas']);
+        // Ganti dengan:
+        Route::patch('fasilitas/{fasilitas}/toggle-status', [FasilitasController::class, 'toggleStatus'])
+            ->name('fasilitas.toggle-status');
+
+        Route::resource('jadwal', JadwalController::class)->except(['show']);
+        Route::patch('jadwal/{jadwal}/toggle', [JadwalController::class, 'toggleLibur'])
+            ->name('jadwal.toggle');
+
+        // Route sementara (belum ada controller, biar tidak error dulu)
+        Route::get('/booking', fn () => 'Coming soon')->name('booking.index');
+        Route::get('/pembayaran', fn () => 'Coming soon')->name('pembayaran.index');
+        Route::get('/users', fn () => 'Coming soon')->name('users.index');
+        Route::get('/laporan', fn () => 'Coming soon')->name('laporan.index');
+
     });
 
 // ─── Guru ───────────────────────────────────────────────────────────────────
