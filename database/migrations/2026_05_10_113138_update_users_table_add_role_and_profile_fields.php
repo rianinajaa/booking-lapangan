@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -13,7 +13,7 @@ return new class extends Migration
         // Ubah enum role dari 3 menjadi 5
         $table->enum('role', [
             'admin',
-            'guru', 
+            'guru',
             'siswa_internal',
             'siswa_luar',
             'umum'

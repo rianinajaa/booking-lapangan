@@ -9,115 +9,426 @@ use Illuminate\Support\Facades\Storage;
 
 class FasilitasController extends Controller
 {
-   public function index(Request $request)
-{
-    $fasilitas = Fasilitas::with('jadwal')
-        ->when($request->search, fn($q) =>
-            $q->where('nama', 'like', '%'.$request->search.'%'))
-        ->when($request->jenis, fn($q) =>
-            $q->where('jenis', $request->jenis))
-        ->when($request->status, fn($q) =>
-            $q->where('status', $request->status))
-        ->latest()
-        ->paginate(10);
+    /**
+     * INDEX
+     */
+    public function index(Request $request)
+    {
+        $query = Fasilitas::with('jadwal');
 
-    return view('admin.fasilitas.index', compact('fasilitas'));
-}
+        /*
+        |--------------------------------------------------------------------------
+        | SEARCH
+        |--------------------------------------------------------------------------
+        */
 
-    // Form tambah fasilitas
+        $query->when($request->search, function ($q) use ($request) {
+
+            $q->where(function ($sub) use ($request) {
+
+                $sub->where('nama', 'like', '%' . $request->search . '%')
+                    ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
+
+            });
+
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTER JENIS
+        |--------------------------------------------------------------------------
+        */
+
+        $query->when($request->jenis, function ($q) use ($request) {
+
+            $q->where('jenis', $request->jenis);
+
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTER STATUS
+        |--------------------------------------------------------------------------
+        */
+
+        $query->when($request->status, function ($q) use ($request) {
+
+            $q->where('status', $request->status);
+
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | FILTER STATUS OPERASIONAL
+        |--------------------------------------------------------------------------
+        */
+
+        $query->when($request->status_operasional, function ($query) use ($request) {
+
+            $now = now('Asia/Jakarta')->format('H:i:s');
+
+            /*
+            |--------------------------------------------------------------------------
+            | BUKA
+            |--------------------------------------------------------------------------
+            */
+
+            if ($request->status_operasional === 'buka') {
+
+                $query->whereHas('jadwal', function ($q) use ($now) {
+
+                    $q->where('is_libur', false)
+
+                        ->where(function ($sub) use ($now) {
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | NORMAL
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $sub->where(function ($normal) use ($now) {
+
+                                $normal->whereRaw('jam_buka < jam_tutup')
+                                    ->whereRaw('? BETWEEN jam_buka AND jam_tutup', [$now]);
+
+                            })
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | LEWAT TENGAH MALAM
+                            |--------------------------------------------------------------------------
+                            */
+
+                            ->orWhere(function ($overnight) use ($now) {
+
+                                $overnight->whereRaw('jam_buka > jam_tutup')
+
+                                    ->where(function ($time) use ($now) {
+
+                                        $time->whereRaw('? >= jam_buka', [$now])
+                                             ->orWhereRaw('? <= jam_tutup', [$now]);
+
+                                    });
+
+                            });
+
+                        });
+
+                });
+
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | TUTUP
+            |--------------------------------------------------------------------------
+            */
+
+            elseif ($request->status_operasional === 'tutup') {
+
+                $query->where(function ($q) use ($now) {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | PUNYA JADWAL TAPI TUTUP
+                    |--------------------------------------------------------------------------
+                    */
+
+                    $q->whereHas('jadwal', function ($jadwal) use ($now) {
+
+                        $jadwal->where(function ($sub) use ($now) {
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | LIBUR
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $sub->where('is_libur', true)
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | DILUAR JAM OPERASIONAL
+                            |--------------------------------------------------------------------------
+                            */
+
+                            ->orWhere(function ($offline) use ($now) {
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | NORMAL
+                                |--------------------------------------------------------------------------
+                                */
+
+                                $offline->where(function ($normal) use ($now) {
+
+                                    $normal->whereRaw('jam_buka < jam_tutup')
+                                        ->whereRaw('? NOT BETWEEN jam_buka AND jam_tutup', [$now]);
+
+                                })
+
+                                /*
+                                |--------------------------------------------------------------------------
+                                | LEWAT TENGAH MALAM
+                                |--------------------------------------------------------------------------
+                                */
+
+                                ->orWhere(function ($overnight) use ($now) {
+
+                                    $overnight->whereRaw('jam_buka > jam_tutup')
+
+                                        ->whereRaw('? < jam_buka', [$now])
+                                        ->whereRaw('? > jam_tutup', [$now]);
+
+                                });
+
+                            });
+
+                        });
+
+                    })
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | BELUM PUNYA JADWAL
+                    |--------------------------------------------------------------------------
+                    */
+
+                    ->orWhereDoesntHave('jadwal');
+
+                });
+
+            }
+
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | PAGINATION
+        |--------------------------------------------------------------------------
+        */
+
+        $fasilitas = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        /*
+        |--------------------------------------------------------------------------
+        | STATISTIK
+        |--------------------------------------------------------------------------
+        */
+
+        $totalFasilitas = Fasilitas::count();
+
+        $totalActive = Fasilitas::where('status', 'aktif')->count();
+
+        $avgPrice = Fasilitas::avg('harga_per_jam') ?? 0;
+
+        /*
+        |--------------------------------------------------------------------------
+        | RETURN VIEW
+        |--------------------------------------------------------------------------
+        */
+
+        return view('admin.fasilitas.index', compact(
+            'fasilitas',
+            'totalFasilitas',
+            'totalActive',
+            'avgPrice'
+        ));
+    }
+
+    /**
+     * FORM CREATE
+     */
     public function create()
     {
         return view('admin.fasilitas.create');
     }
 
-    // Simpan fasilitas baru
+    /**
+     * STORE
+     */
     public function store(Request $request)
     {
-        $request->validate([
-            'nama'         => 'required|string|max:255',
-            'jenis'        => 'required|in:lapangan,ruang_multimedia,lab',
-            'deskripsi'    => 'nullable|string',
-            'foto'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'harga_per_jam'=> 'required|numeric|min:0',
-            'status'       => 'required|in:aktif,nonaktif',
-        ]);
+        $data = $this->validateData($request);
 
-        $data = $request->except('foto');
+        /*
+        |--------------------------------------------------------------------------
+        | UPLOAD FOTO
+        |--------------------------------------------------------------------------
+        */
 
-        // Upload foto jika ada
         if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('fasilitas', 'public');
+
+            $data['foto'] = $request->file('foto')
+                ->store('fasilitas', 'public');
+
         }
 
         Fasilitas::create($data);
 
-        return redirect()->route('admin.fasilitas.index')
+        return redirect()
+            ->route('admin.fasilitas.index')
             ->with('success', 'Fasilitas berhasil ditambahkan!');
     }
 
-    // Tampilkan detail fasilitas
+    /**
+     * SHOW
+     */
     public function show(Fasilitas $fasilitas)
     {
+        $fasilitas->load('jadwal');
+
         return view('admin.fasilitas.show', compact('fasilitas'));
     }
 
-    // Form edit fasilitas
+    /**
+     * FORM EDIT
+     */
     public function edit(Fasilitas $fasilitas)
     {
         return view('admin.fasilitas.edit', compact('fasilitas'));
     }
 
-    // Update fasilitas
+    /**
+     * UPDATE
+     */
     public function update(Request $request, Fasilitas $fasilitas)
     {
-        $request->validate([
-            'nama'         => 'required|string|max:255',
-            'jenis'        => 'required|in:lapangan,ruang_multimedia,lab',
-            'deskripsi'    => 'nullable|string',
-            'foto'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'harga_per_jam'=> 'required|numeric|min:0',
-            'status'       => 'required|in:aktif,nonaktif',
-        ]);
+        $data = $this->validateData($request);
 
-        $data = $request->except('foto');
+        /*
+        |--------------------------------------------------------------------------
+        | FOTO BARU
+        |--------------------------------------------------------------------------
+        */
 
-        // Upload foto baru jika ada
         if ($request->hasFile('foto')) {
-            // Hapus foto lama
-            if ($fasilitas->foto) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | HAPUS FOTO LAMA
+            |--------------------------------------------------------------------------
+            */
+
+            if ($fasilitas->foto &&
+                Storage::disk('public')->exists($fasilitas->foto)) {
+
                 Storage::disk('public')->delete($fasilitas->foto);
+
             }
-            $data['foto'] = $request->file('foto')->store('fasilitas', 'public');
+
+            /*
+            |--------------------------------------------------------------------------
+            | STORE FOTO BARU
+            |--------------------------------------------------------------------------
+            */
+
+            $data['foto'] = $request->file('foto')
+                ->store('fasilitas', 'public');
         }
 
         $fasilitas->update($data);
 
-        return redirect()->route('admin.fasilitas.index')
-            ->with('success', 'Fasilitas berhasil diupdate!');
+        return redirect()
+            ->route('admin.fasilitas.index')
+            ->with('success', 'Fasilitas berhasil diperbarui!');
     }
 
-    // Hapus fasilitas
+    /**
+     * DESTROY
+     */
     public function destroy(Fasilitas $fasilitas)
     {
-        // Hapus foto jika ada
-        if ($fasilitas->foto) {
+        /*
+        |--------------------------------------------------------------------------
+        | DELETE FOTO
+        |--------------------------------------------------------------------------
+        */
+
+        if ($fasilitas->foto &&
+            Storage::disk('public')->exists($fasilitas->foto)) {
+
             Storage::disk('public')->delete($fasilitas->foto);
+
         }
 
         $fasilitas->delete();
 
-        return redirect()->route('admin.fasilitas.index')
+        return redirect()
+            ->route('admin.fasilitas.index')
             ->with('success', 'Fasilitas berhasil dihapus!');
     }
 
-    // Toggle status aktif/nonaktif
+    /**
+     * TOGGLE STATUS
+     */
     public function toggleStatus(Fasilitas $fasilitas)
     {
         $fasilitas->update([
-            'status' => $fasilitas->status === 'aktif' ? 'nonaktif' : 'aktif'
+
+            'status' => $fasilitas->status === 'aktif'
+                ? 'nonaktif'
+                : 'aktif'
+
         ]);
 
-        return redirect()->back()
-            ->with('success', 'Status fasilitas berhasil diubah!');
+        return back()->with(
+            'success',
+            'Status fasilitas berhasil diubah!'
+        );
+    }
+
+    /**
+     * VALIDATION
+     */
+    private function validateData(Request $request)
+    {
+        return $request->validate([
+
+            'nama' => [
+                'required',
+                'string',
+                'max:255'
+            ],
+
+            'jenis' => [
+                'required',
+                'in:lapangan,ruang_multimedia,lab'
+            ],
+
+            'deskripsi' => [
+                'nullable',
+                'string'
+            ],
+
+            'foto' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048'
+            ],
+
+            'harga_per_jam' => [
+                'required',
+                'numeric',
+                'min:0'
+            ],
+
+            'status' => [
+                'required',
+                'in:aktif,nonaktif'
+            ],
+
+            'kapasitas' => [
+                'nullable',
+                'integer',
+                'min:1'
+            ],
+
+        ]);
     }
 }
