@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Jadwal')
+@section('title', 'Tambah Jadwal Operasional')
 @section('page-title', 'Tambah Jadwal')
 
 @section('breadcrumb')
@@ -9,99 +9,203 @@
 @endsection
 
 @section('content')
-<div class="card" style="max-width: 600px; margin: 0 auto;">
-    <div class="card-header">
-        <span class="card-title">
-            <i class="fa-regular fa-calendar-plus" style="margin-right: 8px; color: #00d98b;"></i>
-            Form Tambah Jadwal Operasional
-        </span>
+<style>
+    :root {
+        --accent: #00d98b;
+        --accent-glow: rgba(0, 217, 139, 0.2);
+        --glass-bg: rgba(15, 23, 42, 0.8);
+        --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card {
+        background: var(--glass-bg) !important;
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 32px !important;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+        position: relative;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        padding-left: 4px;
+    }
+
+    .glass-input, .glass-select {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.2) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 16px !important;
+        padding: 14px 18px !important;
+        color: white !important;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .glass-input:focus, .glass-select:focus {
+        border-color: var(--accent) !important;
+        background: rgba(0, 217, 139, 0.05) !important;
+        box-shadow: 0 0 15px var(--accent-glow);
+        outline: none;
+    }
+
+    /* Custom Radio Styling */
+    .radio-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .radio-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .radio-card:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    input[type="radio"]:checked + .radio-card {
+        border-color: var(--accent);
+        background: rgba(0, 217, 139, 0.1);
+    }
+
+    .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #334155;
+    }
+
+    input[type="radio"]:checked + .radio-card .dot.open { background: #00d98b; box-shadow: 0 0 10px #00d98b; }
+    input[type="radio"]:checked + .radio-card .dot.closed { background: #ff4757; box-shadow: 0 0 10px #ff4757; }
+
+    .btn-save {
+        background: var(--accent) !important;
+        color: #0b1120 !important;
+        font-weight: 800 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 16px 32px !important;
+        border-radius: 18px !important;
+        border: none !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 10px 20px var(--accent-glow);
+    }
+
+    .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px var(--accent-glow);
+    }
+</style>
+
+<div class="glass-card" style="max-width: 700px; margin: 0 auto;">
+    {{-- Header with Gradient --}}
+    <div style="background: linear-gradient(to right, rgba(0, 217, 139, 0.1), transparent); padding: 32px 32px 20px;">
+        <h2 style="color: white; font-size: 28px; font-weight: 800; margin: 0; letter-spacing: -0.5px;">
+            Konfigurasi <span style="color: var(--accent);">Jadwal</span>
+        </h2>
+        <p style="color: #94a3b8; font-size: 14px; margin-top: 8px;">Tentukan waktu operasional untuk fasilitas aset kamu.</p>
     </div>
-    
-    <div style="padding: 24px;">
+
+    <div style="padding: 0 32px 40px;">
         <form action="{{ route('admin.jadwal.store') }}" method="POST">
             @csrf
 
-            {{-- Pilih Fasilitas --}}
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px;">
-                    Fasilitas <span style="color: #ef4444;">*</span>
-                </label>
-                <select name="fasilitas_id" required
-                    style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
-                        border-radius: 10px; padding: 10px 14px; font-size: 14px; color: var(--text);">
-                    <option value="">Pilih Fasilitas</option>
-                    @foreach($fasilitas as $f)
-                        <option value="{{ $f->id }}" {{ old('fasilitas_id') == $f->id ? 'selected' : '' }}>
-                            {{ $f->nama }} ({{ ucfirst(str_replace('_', ' ', $f->jenis)) }})
-                        </option>
-                    @endforeach
-                </select>
+            {{-- Row 1: Fasilitas --}}
+            <div class="form-group">
+                <label class="form-label">Target Fasilitas</label>
+                <div style="position: relative;">
+                    <i class="fa-solid fa-building-circle-check" style="position: absolute; right: 18px; top: 18px; color: var(--accent); opacity: 0.5;"></i>
+                    <select name="fasilitas_id" required class="glass-select">
+                        <option value="" disabled selected>Pilih salah satu fasilitas...</option>
+                        @foreach($fasilitas as $f)
+                            <option value="{{ $f->id }}" {{ old('fasilitas_id') == $f->id ? 'selected' : '' }}>
+                                {{ $f->nama }} — {{ strtoupper($f->jenis) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 @error('fasilitas_id')
-                    <div style="color: #f87171; font-size: 11px; margin-top: 4px;">{{ $message }}</div>
-                @enderror
-                @if($fasilitas->isEmpty())
-                    <div style="color: #f97316; font-size: 11px; margin-top: 4px;">
-                        <i class="fa-solid fa-triangle-exclamation"></i> 
-                        Belum ada fasilitas aktif. Silakan <a href="{{ route('admin.fasilitas.create') }}" style="color:#00d98b;">tambah fasilitas</a> terlebih dahulu.
-                    </div>
-                @endif
-            </div>
-
-            {{-- Jam Buka & Jam Tutup --}}
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px;">
-                        Jam Buka <span style="color: #ef4444;">*</span>
-                    </label>
-                    <input type="time" name="jam_buka" value="{{ old('jam_buka', '08:00') }}" required
-                        style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
-                            border-radius: 10px; padding: 10px 14px; font-size: 14px; color: var(--text);">
-                    @error('jam_buka')
-                        <div style="color: #f87171; font-size: 11px; margin-top: 4px;">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px;">
-                        Jam Tutup <span style="color: #ef4444;">*</span>
-                    </label>
-                    <input type="time" name="jam_tutup" value="{{ old('jam_tutup', '21:00') }}" required
-                        style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
-                            border-radius: 10px; padding: 10px 14px; font-size: 14px; color: var(--text);">
-                    @error('jam_tutup')
-                        <div style="color: #f87171; font-size: 11px; margin-top: 4px;">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
-            {{-- Status Libur --}}
-            <div style="margin-bottom: 24px;">
-                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px;">
-                    Status Operasional
-                </label>
-                <div style="display: flex; gap: 16px;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="radio" name="is_libur" value="0" {{ old('is_libur', '0') == '0' ? 'checked' : '' }} 
-                            style="accent-color: #00d98b;">
-                        <span style="font-size: 13px; color: var(--text);">🟢 Buka / Beroperasi</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="radio" name="is_libur" value="1" {{ old('is_libur') == '1' ? 'checked' : '' }}
-                            style="accent-color: #f97316;">
-                        <span style="font-size: 13px; color: var(--text);">🔴 Libur / Tutup</span>
-                    </label>
-                </div>
-                @error('is_libur')
-                    <div style="color: #f87171; font-size: 11px; margin-top: 4px;">{{ $message }}</div>
+                    <p style="color: #ff4757; font-size: 12px; margin: 8px 0 0 4px;"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</p>
                 @enderror
             </div>
 
-            {{-- Buttons --}}
-            <div style="display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 20px;">
-                <a href="{{ route('admin.jadwal.index') }}" class="btn btn-outline btn-sm">
-                    <i class="fa-solid fa-arrow-left"></i> Batal
+            {{-- Row 2: Jam Operasional --}}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div class="form-group">
+                    <label class="form-label">Jam Buka</label>
+                    <input type="time" name="jam_buka" value="{{ old('jam_buka', '08:00') }}" required class="glass-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Jam Tutup</label>
+                    <input type="time" name="jam_tutup" value="{{ old('jam_tutup', '21:00') }}" required class="glass-input">
+                </div>
+            </div>
+
+            {{-- Row 3: Status Terkini --}}
+            <div class="form-group">
+                <label class="form-label">Status Awal</label>
+                <div class="radio-container">
+                    {{-- Option Open --}}
+                    <label style="cursor: pointer;">
+                        <input type="radio" name="is_libur" value="0" {{ old('is_libur', '0') == '0' ? 'checked' : '' }} style="display: none;">
+                        <div class="radio-card">
+                            <div class="dot open"></div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="color: white; font-weight: 600; font-size: 14px;">Buka</span>
+                                <span style="color: #64748b; font-size: 11px;">Beroperasi normal</span>
+                            </div>
+                        </div>
+                    </label>
+
+                    {{-- Option Holiday --}}
+                    <label style="cursor: pointer;">
+                        <input type="radio" name="is_libur" value="1" {{ old('is_libur') == '1' ? 'checked' : '' }} style="display: none;">
+                        <div class="radio-card">
+                            <div class="dot closed"></div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="color: white; font-weight: 600; font-size: 14px;">Libur</span>
+                                <span style="color: #64748b; font-size: 11px;">Tutup sementara</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            {{-- Action Buttons --}}
+            <div style="display: flex; align-items:center; justify-content: space-between; margin-top: 20px; padding-top: 30px; border-top: 1px solid var(--glass-border);">
+                <a href="{{ route('admin.jadwal.index') }}" style="color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 600; transition: color 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#94a3b8'">
+                    <i class="fa-solid fa-arrow-left-long me-2"></i> Kembali
                 </a>
-                <button type="submit" class="btn btn-green btn-sm" style="background: #00d98b; border-color: #00d98b; color: #000;">
-                    <i class="fa-solid fa-save"></i> Simpan Jadwal
+
+                <button type="submit" class="btn btn-save">
+                    <i class="fa-solid fa-cloud-arrow-up me-2"></i> Simpan Konfigurasi
                 </button>
             </div>
         </form>

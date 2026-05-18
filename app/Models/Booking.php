@@ -30,6 +30,23 @@ class Booking extends Model
         return $this->hasMany(DetailBooking::class);
     }
 
+    /**
+     * RELASI TAMBAHAN:
+     * Biar lo bisa panggil $booking->fasilitas langsung.
+     * Ini akan mencari Fasilitas lewat tabel detail_bookings.
+     */
+    public function fasilitas()
+    {
+        return $this->hasManyThrough(
+            Fasilitas::class,
+            DetailBooking::class,
+            'booking_id',    // Foreign key di tabel detail_bookings
+            'id',            // Foreign key di tabel fasilitas
+            'id',            // Local key di tabel bookings
+            'fasilitas_id'   // Local key di tabel detail_bookings
+        );
+    }
+
     // Relasi: booking punya satu pembayaran
     public function pembayaran()
     {

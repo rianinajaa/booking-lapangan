@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard') — SpaceGo Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <style>
@@ -407,22 +408,64 @@
     {{-- Search --}}
     <div class="search-box">
         <i class="fa-solid fa-search" style="color:var(--text-3); font-size:13px;"></i>
-        <input type="text" placeholder="Cari data...">
+        <input type="text" placeholder="Cari Data...">
     </div>
 
-    {{-- Right --}}
-    <div class="topbar-right">
-        <div class="icon-btn">
-            <i class="fa-regular fa-bell"></i>
-            <span class="dot"></span>
-        </div>
-        <div class="icon-btn">
-            <i class="fa-solid fa-gear"></i>
-        </div>
-        <div class="avatar-btn" title="{{ auth()->user()->name }}">
+    <div class="topbar-right" x-data="{ open: false }">
+    <div class="icon-btn">
+        <i class="fa-regular fa-bell"></i>
+        <span class="dot"></span>
+    </div>
+    <div class="icon-btn">
+        <i class="fa-solid fa-gear"></i>
+    </div>
+
+    {{-- Avatar with Dropdown --}}
+    <div class="relative">
+        <button @click="open = !open" @click.outside="open = false" class="avatar-btn">
             {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+        </button>
+
+        {{-- Dropdown Menu --}}
+        <div x-show="open"
+             x-transition:enter="transition ease-out duration-100"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-75"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="absolute right-0 mt-3 w-56 bg-[#20232b] border border-[rgba(255,255,255,0.07)] rounded-xl shadow-2xl z-50 overflow-hidden"
+             style="display: none;">
+
+            {{-- Header Profil --}}
+            <div class="px-4 py-3 border-bottom border-[rgba(255,255,255,0.07)] bg-[rgba(255,255,255,0.02)]">
+                <p class="text-xs font-bold text-[var(--text-3)] uppercase tracking-wider">Akun Masuk</p>
+                <p class="text-[13.5px] font-semibold text-white truncate">{{ auth()->user()->name }}</p>
+                <p class="text-[11px] text-[var(--text-3)] truncate">{{ auth()->user()->email }}</p>
+            </div>
+
+            {{-- Links --}}
+            <div class="py-1">
+                <a href="/admin/profile" class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-[var(--text-2)] hover:bg-[rgba(255,255,255,0.05)] hover:text-white transition-all">
+                    <i class="fa-solid fa-user-gear w-4"></i> Pengaturan Profil
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-[var(--text-2)] hover:bg-[rgba(255,255,255,0.05)] hover:text-white transition-all">
+                    <i class="fa-solid fa-shield-halved w-4"></i> Keamanan
+                </a>
+            </div>
+
+            {{-- Logout Section --}}
+            <div class="border-t border-[rgba(255,255,255,0.07)] py-1 bg-[rgba(239,68,68,0.02)]">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] text-red-400 hover:bg-[rgba(239,68,68,0.1)] transition-all">
+                        <i class="fa-solid fa-right-from-bracket w-4"></i> Keluar Aplikasi
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
+</div>
 
 </header>
 
