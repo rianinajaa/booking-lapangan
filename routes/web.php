@@ -109,7 +109,7 @@ Route::middleware(['auth', 'role:guru'])
             return 'Dashboard Guru';
         })->name('dashboard');
     });
-
+        
 /*
 |--------------------------------------------------------------------------
 | ROLE: USER (Umum, Siswa)
