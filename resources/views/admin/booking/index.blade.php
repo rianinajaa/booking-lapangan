@@ -1,384 +1,297 @@
 @extends('layouts.admin')
 
-@section('title', 'Data Booking Lapangan')
-@section('page-title', 'Management Booking')
+@section('title', 'Data Booking')
+@section('page-title', 'Booking')
 
 @section('breadcrumb')
     <span class="current">Bookings</span>
 @endsection
 
 @section('content')
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<style>
-    * {
-        font-family: 'Poppins', sans-serif;
-        box-sizing: border-box;
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: { poppins: ['Poppins', 'sans-serif'] },
+                colors: {
+                    green:  '#34f5a1',
+                    yellow: '#facc15',
+                    red:    '#fb7185',
+                    blue:   '#4ea8ff',
+                    purple: '#a78bfa',
+                }
+            }
+        }
     }
+</script>
 
-    :root {
-        --bg: #0b1120;
-        --card: #111827;
-        --card2: #1a2235;
-        --border: rgba(255, 255, 255, .06);
-        --text: #f8fafc;
-        --text2: #cbd5e1;
-        --text3: #94a3b8;
-        --green: #34f5a1;
-        --blue: #4ea8ff;
-        --cyan: #06b6d4;
-        --yellow: #facc15;
-        --red: #fb7185;
-    }
+<div class="font-poppins flex flex-col gap-5">
 
-    .booking-container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
+    {{-- HEADER --}}
+    <div class="flex justify-between items-start flex-wrap gap-3">
+        <div>
+            <h1 class="text-[36px] font-extrabold text-white leading-tight">
+                Manajemen <span class="text-green">Booking</span>
+            </h1>
+            <p class="text-slate-400 text-sm mt-1">Kelola dan pantau seluruh data pemesanan fasilitas.</p>
+        </div>
+        <a href="{{ route('admin.booking.create') }}"
+            class="h-11 px-5 bg-green text-[#0b1120] rounded-[14px] text-[13px] font-bold flex items-center gap-2 no-underline hover:opacity-90 transition">
+            <i class="fa-solid fa-plus"></i> Tambah Booking
+        </a>
+    </div>
 
-    /* Top Actions & Filters */
-    .table-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 15px;
-        background: var(--card);
-        padding: 16px 20px;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-    }
-
-    .search-filter-form {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .search-box {
-        position: relative;
-    }
-
-    .search-box i {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text3);
-    }
-
-    .search-box input {
-        background: var(--bg);
-        border: 1px solid var(--border);
-        color: var(--text);
-        padding: 8px 12px 8px 35px;
-        border-radius: 8px;
-        font-size: 14px;
-        outline: none;
-        width: 240px;
-        transition: 0.3s;
-    }
-
-    .search-box input:focus { border-color: var(--blue); }
-
-    .filter-select {
-        background: var(--bg);
-        border: 1px solid var(--border);
-        color: var(--text2);
-        padding: 8px 12px;
-        border-radius: 8px;
-        font-size: 14px;
-        outline: none;
-        cursor: pointer;
-    }
-
-    .btn-filter-submit {
-        background: var(--card2);
-        color: var(--text);
-        border: 1px solid var(--border);
-        padding: 8px 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: 0.3s;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .btn-filter-submit:hover { background: var(--blue); color: #0b1120; }
-
-    .btn-add-booking {
-        background: linear-gradient(135deg, var(--blue), #2563eb);
-        color: #fff;
-        padding: 9px 18px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 12px rgba(78, 168, 255, 0.2);
-    }
-
-    /* Table Dashboard Admin */
-    .table-responsive-wrap {
-        background: var(--card);
-        border-radius: 14px;
-        border: 1px solid var(--border);
-        overflow: hidden;
-    }
-
-    .modern-table {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: left;
-    }
-
-    .modern-table th {
-        background: var(--card2);
-        color: var(--text3);
-        padding: 16px 20px;
-        font-weight: 600;
-        font-size: 13px;
-        text-transform: uppercase;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .modern-table td {
-        padding: 16px 20px;
-        border-bottom: 1px solid var(--border);
-        color: var(--text2);
-        font-size: 14px;
-        vertical-align: middle;
-    }
-
-    .booking-id { color: var(--blue); font-weight: 600; }
-    .booking-user { color: var(--text); font-weight: 500; }
-
-    .badge-modern {
-        display: inline-flex;
-        align-items: center;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-    .badge-yellow { background: rgba(250, 204, 21, 0.1); color: var(--yellow); }
-    .badge-green { background: rgba(52, 245, 161, 0.1); color: var(--green); }
-    .badge-red { background: rgba(251, 113, 133, 0.1); color: var(--red); }
-    .badge-blue { background: rgba(78, 168, 255, 0.1); color: var(--blue); }
-
-    .action-group { display: flex; gap: 8px; }
-
-    .action-btn {
-        background: var(--card2);
-        border: 1px solid var(--border);
-        color: var(--text2);
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: 0.2s;
-        text-decoration: none;
-    }
-    .action-btn.view:hover { background: var(--cyan); color: #fff; border-color: var(--cyan); }
-    .action-btn.edit:hover { background: var(--yellow); color: #0b1120; border-color: var(--yellow); }
-    .action-btn.delete:hover { background: var(--red); color: #fff; border-color: var(--red); }
-
-    /* Isolated Pop-up Overlay */
-    .detail-popup-overlay {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(5, 9, 20, 0.88);
-        backdrop-filter: blur(10px);
-        z-index: 999999;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
-
-    .detail-popup-container {
-        width: 100%;
-        max-width: 900px;
-        height: 85vh;
-        background: #0b0f1a;
-        border-radius: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        overflow: hidden;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    }
-
-    .detail-popup-close {
-        position: absolute;
-        top: 15px; right: 20px;
-        background: #1a2235;
-        border: 1px solid rgba(255,255,255,0.1);
-        color: #fff;
-        font-size: 24px; width: 40px; height: 40px;
-        border-radius: 50%; cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        z-index: 10; transition: 0.2s;
-    }
-    .detail-popup-close:hover { background: var(--red); color: white; transform: rotate(90deg); }
-
-    .detail-iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        background: transparent;
-    }
-
-    .pagination-container {
-        padding: 15px 20px;
-        background: var(--card);
-        border-top: 1px solid var(--border);
-    }
-</style>
-
-<div class="booking-container">
+    {{-- ALERT --}}
     @if(session('success'))
-        <div style="background: rgba(52, 245, 161, 0.1); border: 1px solid var(--green); color: var(--green); padding: 12px 20px; border-radius: 8px; font-size: 14px;">
-            <i class="fa-solid fa-circle-check me-2"></i> {{ session('success') }}
+        <div class="flex items-center gap-3 bg-green/10 border border-green/25 text-green rounded-2xl px-4 py-3 text-sm font-semibold">
+            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
         </div>
     @endif
 
-    <div class="table-actions">
-        <form action="{{ route('admin.booking.index') }}" method="GET" class="search-filter-form">
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" name="search" placeholder="Cari Kode / Nama..." value="{{ request('search') }}">
+    {{-- STAT CARDS --}}
+    @php
+        $totalBooking    = $bookings->total();
+        $menungguCount   = \App\Models\Booking::where('status_booking','menunggu')->count();
+        $konfirmasiCount = \App\Models\Booking::where('status_booking','dikonfirmasi')->count();
+        $selesaiCount    = \App\Models\Booking::where('status_booking','selesai')->count();
+    @endphp
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-4">
+
+        <div class="relative overflow-hidden bg-gradient-to-br from-[#141c2b] to-[#111827] border border-green/[0.15] rounded-[20px] p-5">
+            <div class="absolute -top-8 -right-8 w-24 h-24 bg-green/10 rounded-full"></div>
+            <div class="w-10 h-10 rounded-[12px] bg-green/[0.12] flex items-center justify-center mb-3">
+                <i class="fa-solid fa-calendar-check text-green text-sm"></i>
             </div>
-            <select name="status" class="filter-select">
-                <option value="">-- Semua Status --</option>
-                <option value="menunggu" {{ request('status') == 'menunggu' ? 'selected' : '' }}>Pending</option>
-                <option value="dikonfirmasi" {{ request('status') == 'dikonfirmasi' ? 'selected' : '' }}>Verified</option>
-                <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Done</option>
-                <option value="dibatalkan" {{ request('status') == 'dibatalkan' ? 'selected' : '' }}>Cancelled</option>
-            </select>
-            <button type="submit" class="btn-filter-submit"><i class="fa-solid fa-filter"></i> Filter</button>
-        </form>
-        <a href="{{ route('admin.booking.create') }}" class="btn-add-booking"><i class="fa-solid fa-plus"></i> Tambah Booking</a>
+            <div class="text-[#7c879f] text-[11px] font-extrabold uppercase tracking-wider mb-1">Total Booking</div>
+            <div class="text-white text-2xl font-extrabold">{{ $totalBooking }}</div>
+        </div>
+
+        <div class="relative overflow-hidden bg-gradient-to-br from-[#141c2b] to-[#111827] border border-yellow/[0.15] rounded-[20px] p-5">
+            <div class="absolute -top-8 -right-8 w-24 h-24 bg-yellow/10 rounded-full"></div>
+            <div class="w-10 h-10 rounded-[12px] bg-yellow/[0.12] flex items-center justify-center mb-3">
+                <i class="fa-solid fa-clock text-yellow text-sm"></i>
+            </div>
+            <div class="text-[#7c879f] text-[11px] font-extrabold uppercase tracking-wider mb-1">Menunggu</div>
+            <div class="text-yellow text-2xl font-extrabold">{{ $menungguCount }}</div>
+        </div>
+
+        <div class="relative overflow-hidden bg-gradient-to-br from-[#141c2b] to-[#111827] border border-green/[0.15] rounded-[20px] p-5">
+            <div class="absolute -top-8 -right-8 w-24 h-24 bg-green/10 rounded-full"></div>
+            <div class="w-10 h-10 rounded-[12px] bg-green/[0.12] flex items-center justify-center mb-3">
+                <i class="fa-solid fa-circle-check text-green text-sm"></i>
+            </div>
+            <div class="text-[#7c879f] text-[11px] font-extrabold uppercase tracking-wider mb-1">Dikonfirmasi</div>
+            <div class="text-green text-2xl font-extrabold">{{ $konfirmasiCount }}</div>
+        </div>
+
+        <div class="relative overflow-hidden bg-gradient-to-br from-[#141c2b] to-[#111827] border border-green/[0.15] rounded-[20px] p-5">
+            <div class="absolute -top-8 -right-8 w-24 h-24 bg-green/10 rounded-full"></div>
+            <div class="w-10 h-10 rounded-[12px] bg-green/[0.12] flex items-center justify-center mb-3">
+                <i class="fa-solid fa-flag-checkered text-green text-sm"></i>
+            </div>
+            <div class="text-[#7c879f] text-[11px] font-extrabold uppercase tracking-wider mb-1">Selesai</div>
+            <div class="text-green text-2xl font-extrabold">{{ $selesaiCount }}</div>
+        </div>
+
     </div>
 
-    <div class="table-responsive-wrap">
-        <table class="modern-table">
-            <thead>
-                <tr>
-                    <th>Customer / Code</th>
-                    <th>Fasilitas Lapangan</th>
-                    <th>Jadwal Sewa</th>
-                    <th>Total Pembayaran</th>
-                    <th>Status</th>
-                    <th style="text-align: center;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-            @forelse($bookings as $booking)
-                @php
-                    // Mengambil data detail pertama dengan aman
-                    $detail = $booking->detailBooking ? $booking->detailBooking->first() : null;
-                @endphp
-                <tr>
-                    <td>
-                        <div class="booking-id">#{{ strtoupper($booking->kode_booking) }}</div>
-                        <div class="booking-user">{{ $booking->user->name ?? 'Guest' }}</div>
-                    </td>
-                    <td>
-                        <span style="color:#fff; font-weight:600;">
-                            @if($detail && $detail->fasilitas)
-                                {{-- 1. Mencoba mengambil nama_fasilitas --}}
-                                {{-- 2. Jika nama_fasilitas kosong/null, coba ambil kolom 'nama' --}}
-                                {{-- 3. Jika keduanya kosong, berikan info teks peringatan warna kuning --}}
-                                {!! !empty($detail->fasilitas->nama_fasilitas) ? e($detail->fasilitas->nama_fasilitas) : (!empty($detail->fasilitas->nama) ? e($detail->fasilitas->nama) : '<span style="color:var(--yellow);">[Kolom DB Kosong]</span>') !!}
-                            @else
-                                <span style="color:var(--red); font-size:13px;">Tidak Ada Relasi</span>
-                            @endif
-                        </span>
-                    </td>
-                    <td>
-                        <div style="font-weight:500;">{{ ($detail && $detail->tanggal) ? (method_exists($detail->tanggal, 'format') ? $detail->tanggal->format('d M Y') : $detail->tanggal) : '-' }}</div>
-                        <small style="color:var(--yellow); font-weight:600;">
-                            <i class="fa-regular fa-clock me-1"></i>{{ $detail ? substr($detail->jam_mulai, 0, 5).' - '.substr($detail->jam_selesai, 0, 5) : '--:--' }} WIB
-                        </small>
-                    </td>
-                    <td><span style="color:var(--green); font-weight:600;">Rp {{ number_format($booking->total_harga, 0, ',', '.') }}</span></td>
-                    <td>
+    {{-- FILTER --}}
+    <form method="GET" action="{{ route('admin.booking.index') }}"
+        class="bg-gradient-to-br from-[#141c2b] to-[#111827] border border-white/[0.06] rounded-[20px] px-5 py-4 flex gap-3 flex-wrap items-center">
+
+        <div class="relative flex-1 min-w-[200px]">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+            <input type="text" name="search" value="{{ request('search') }}"
+                placeholder="Cari kode booking atau nama user..."
+                class="w-full h-9 bg-white/[0.05] border border-white/[0.08] rounded-xl pl-9 pr-3 text-[13px] text-white placeholder-slate-500 outline-none focus:border-green/40">
+        </div>
+
+        <select name="status"
+            style="background-color:#111827; color-scheme:dark;"
+            class="h-9 border border-white/[0.08] rounded-xl px-3 text-[13px] text-white min-w-[160px] outline-none focus:border-green/40">
+            <option value=""              style="background:#111827;">Semua Status</option>
+            <option value="menunggu"      style="background:#111827; color:#facc15;" {{ request('status') === 'menunggu'      ? 'selected' : '' }}>Menunggu</option>
+            <option value="dikonfirmasi"  style="background:#111827; color:#4ea8ff;" {{ request('status') === 'dikonfirmasi'  ? 'selected' : '' }}>Dikonfirmasi</option>
+            <option value="selesai"       style="background:#111827; color:#34f5a1;" {{ request('status') === 'selesai'       ? 'selected' : '' }}>Selesai</option>
+            <option value="dibatalkan"    style="background:#111827; color:#fb7185;" {{ request('status') === 'dibatalkan'    ? 'selected' : '' }}>Dibatalkan</option>
+        </select>
+
+        <button type="submit"
+            class="h-9 px-5 bg-green text-[#0b1120] rounded-xl text-[13px] font-bold hover:opacity-90 transition">
+            <i class="fa-solid fa-filter mr-1"></i> Filter
+        </button>
+        @if(request('search') || request('status'))
+            <a href="{{ route('admin.booking.index') }}"
+                class="h-9 px-4 bg-white/[0.05] border border-white/[0.08] rounded-xl text-[13px] text-slate-400 flex items-center hover:text-white transition no-underline">
+                Reset
+            </a>
+        @endif
+    </form>
+
+    {{-- TABLE --}}
+    <div class="bg-gradient-to-br from-[#141c2b] to-[#111827] border border-white/[0.06] rounded-[24px] overflow-hidden">
+
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse min-w-[800px]">
+                <thead>
+                    <tr>
+                        <th class="text-left px-6 py-4 text-[11px] text-[#7c879f] font-extrabold uppercase tracking-wider border-b border-white/[0.05]">Customer / Kode</th>
+                        <th class="text-left px-6 py-4 text-[11px] text-[#7c879f] font-extrabold uppercase tracking-wider border-b border-white/[0.05]">Fasilitas</th>
+                        <th class="text-left px-6 py-4 text-[11px] text-[#7c879f] font-extrabold uppercase tracking-wider border-b border-white/[0.05]">Jadwal</th>
+                        <th class="text-left px-6 py-4 text-[11px] text-[#7c879f] font-extrabold uppercase tracking-wider border-b border-white/[0.05]">Total</th>
+                        <th class="text-left px-6 py-4 text-[11px] text-[#7c879f] font-extrabold uppercase tracking-wider border-b border-white/[0.05]">Status</th>
+                        <th class="text-center px-6 py-4 text-[11px] text-[#7c879f] font-extrabold uppercase tracking-wider border-b border-white/[0.05]">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($bookings as $booking)
                         @php
-                            $statusClass = match($booking->status_booking){
-                                'menunggu' => 'badge-yellow',
-                                'dikonfirmasi' => 'badge-green',
-                                'dibatalkan' => 'badge-red',
-                                'selesai' => 'badge-blue',
-                                default => 'badge-blue'
+                            $detail = $booking->detailBooking?->first();
+                            $statusConfig = match($booking->status_booking) {
+                                'menunggu'    => ['bg-yellow/[0.12] text-yellow border-yellow/20',  '● Menunggu'],
+                                'dikonfirmasi'=> ['bg-green/[0.12] text-green border-green/20',        '● Dikonfirmasi'],
+                                'selesai'     => ['bg-green/[0.12] text-green border-green/20',     '● Selesai'],
+                                'dibatalkan'  => ['bg-red/[0.12] text-red border-red/20',           '● Dibatalkan'],
+                                default       => ['bg-white/[0.05] text-slate-400 border-white/10', $booking->status_booking],
                             };
                         @endphp
-                        <span class="badge-modern {{ $statusClass }}">● {{ strtoupper($booking->status_booking) }}</span>
-                    </td>
-                    <td style="text-align: center;">
-                        <div class="action-group" style="justify-content: center;">
-                            <button type="button" class="action-btn view" title="Lihat Struk" onclick="launchDetailPopup('{{ route('admin.booking.show', $booking->id) }}')">
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                            <a href="{{ route('admin.booking.edit', $booking->id) }}" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
-                            <form action="{{ route('admin.booking.destroy', $booking->id) }}" method="POST" style="display:inline;">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="action-btn delete" onclick="return confirm('Hapus data cok?');"><i class="fa-solid fa-trash"></i></button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            @empty
-                <tr><td colspan="6" style="text-align:center; padding:40px;">Tidak Ada Data...</td></tr>
-            @endforelse
-            </tbody>
-        </table>
+                        <tr class="group hover:bg-white/[0.02] transition-colors">
 
-        <div class="pagination-container">
-            {{ $bookings->appends(request()->query())->links() }}
+                            {{-- Customer / Kode --}}
+                            <td class="px-6 py-4 border-b border-white/[0.04]">
+                                <div class="text-green font-extrabold text-[12px] font-mono mb-0.5">
+                                    #{{ strtoupper($booking->kode_booking) }}
+                                </div>
+                                <div class="text-white font-bold text-[14px]">{{ $booking->user?->name ?? 'Guest' }}</div>
+                                <div class="text-slate-500 text-[11px]">{{ ucfirst($booking->role_booker ?? '') }}</div>
+                            </td>
+
+                            {{-- Fasilitas --}}
+                            <td class="px-6 py-4 border-b border-white/[0.04]">
+                                <div class="text-white font-semibold text-[13px]">
+                                    {{ $detail?->fasilitas?->nama ?? '-' }}
+                                </div>
+                                @if($booking->detailBooking->count() > 1)
+                                    <div class="text-slate-500 text-[11px]">+{{ $booking->detailBooking->count() - 1 }} lainnya</div>
+                                @endif
+                            </td>
+
+                            {{-- Jadwal --}}
+                            <td class="px-6 py-4 border-b border-white/[0.04]">
+                                @if($detail)
+                                    <div class="text-slate-300 text-[13px] font-medium">
+                                        {{ $detail->tanggal instanceof \Carbon\Carbon ? $detail->tanggal->format('d M Y') : $detail->tanggal }}
+                                    </div>
+                                    <div class="text-yellow text-[12px] font-bold mt-0.5">
+                                        <i class="fa-regular fa-clock mr-1"></i>
+                                        {{ substr($detail->jam_mulai, 0, 5) }} – {{ substr($detail->jam_selesai, 0, 5) }} WIB
+                                    </div>
+                                @else
+                                    <span class="text-slate-600">–</span>
+                                @endif
+                            </td>
+
+                            {{-- Total --}}
+                            <td class="px-6 py-4 border-b border-white/[0.04]">
+                                <div class="text-green font-extrabold text-[15px]">
+                                    Rp {{ number_format($booking->total_harga, 0, ',', '.') }}
+                                </div>
+                                @if($booking->diskon_persen > 0)
+                                    <div class="text-slate-500 text-[11px]">Diskon {{ $booking->diskon_persen }}%</div>
+                                @endif
+                            </td>
+
+                            {{-- Status --}}
+                            <td class="px-6 py-4 border-b border-white/[0.04]">
+                                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-[11px] font-bold border {{ $statusConfig[0] }}">
+                                    {{ $statusConfig[1] }}
+                                </span>
+                            </td>
+
+                            {{-- Aksi --}}
+                            <td class="px-6 py-4 border-b border-white/[0.04]">
+                                <div class="flex gap-2 justify-center">
+                                    <button type="button"
+                                        onclick="launchDetailPopup('{{ route('admin.booking.show', $booking->id) }}')"
+                                        class="w-[34px] h-[34px] rounded-[10px] bg-white/[0.05] border border-white/[0.08] text-slate-400 flex items-center justify-center cursor-pointer transition hover:bg-green/[0.15] hover:text-green hover:border-green/30"
+                                        title="Detail">
+                                        <i class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+                                    <a href="{{ route('admin.booking.edit', $booking->id) }}"
+                                        class="w-[34px] h-[34px] rounded-[10px] bg-white/[0.05] border border-white/[0.08] text-slate-400 flex items-center justify-center transition hover:bg-yellow/[0.15] hover:text-yellow hover:border-yellow/30"
+                                        title="Edit">
+                                        <i class="fa-solid fa-pen text-xs"></i>
+                                    </a>
+                                    <form action="{{ route('admin.booking.destroy', $booking->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin hapus booking {{ $booking->kode_booking }}?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit"
+                                            class="w-[34px] h-[34px] rounded-[10px] bg-white/[0.05] border border-white/[0.08] text-slate-400 flex items-center justify-center cursor-pointer transition hover:bg-red/[0.15] hover:text-red hover:border-red/30"
+                                            title="Hapus">
+                                            <i class="fa-solid fa-trash text-xs"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-16 text-slate-500">
+                                <i class="fa-solid fa-calendar-xmark text-4xl opacity-30 block mb-3"></i>
+                                Belum ada data booking
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
+
+        {{-- Pagination --}}
+        @if($bookings->hasPages())
+            <div class="flex justify-between items-center px-6 py-4 border-t border-white/[0.05]">
+                <span class="text-slate-500 text-xs">
+                    Menampilkan {{ $bookings->firstItem() }}–{{ $bookings->lastItem() }}
+                    dari {{ $bookings->total() }} data
+                </span>
+                {{ $bookings->appends(request()->query())->links() }}
+            </div>
+        @endif
     </div>
+
 </div>
 
-<div class="detail-popup-overlay" id="invoicePopupOverlay" onclick="dismissDetailPopup()">
-    <div class="detail-popup-container" onclick="event.stopPropagation()">
-        <button type="button" class="detail-popup-close" onclick="dismissDetailPopup()">&times;</button>
-        <iframe class="detail-iframe" id="invoiceFrame" src=""></iframe>
+{{-- POPUP DETAIL --}}
+<div id="invoicePopupOverlay" onclick="dismissDetailPopup()"
+    style="display:none; position:fixed; inset:0; background:rgba(5,9,20,0.88); backdrop-filter:blur(10px); z-index:999999; align-items:center; justify-content:center; padding:20px;">
+    <div onclick="event.stopPropagation()"
+        style="width:100%; max-width:900px; height:85vh; background:#0b0f1a; border-radius:24px; border:1px solid rgba(255,255,255,0.1); overflow:hidden; position:relative; display:flex; flex-direction:column; box-shadow:0 25px 50px -12px rgba(0,0,0,0.7);">
+        <button onclick="dismissDetailPopup()"
+            style="position:absolute; top:15px; right:20px; background:#1a2235; border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:24px; width:40px; height:40px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; transition:0.2s;"
+            onmouseover="this.style.background='#fb7185'"
+            onmouseout="this.style.background='#1a2235'">
+            &times;
+        </button>
+        <iframe id="invoiceFrame" style="width:100%; height:100%; border:none; background:transparent;" src=""></iframe>
     </div>
 </div>
 
 <script>
     function launchDetailPopup(url) {
         const overlay = document.getElementById('invoicePopupOverlay');
-        const iframe = document.getElementById('invoiceFrame');
-        if(overlay && iframe) {
-            iframe.src = url;
-            overlay.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
+        const iframe  = document.getElementById('invoiceFrame');
+        iframe.src = url;
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
-
     function dismissDetailPopup() {
         const overlay = document.getElementById('invoicePopupOverlay');
-        const iframe = document.getElementById('invoiceFrame');
-        if(overlay && iframe) {
-            overlay.style.display = 'none';
-            iframe.src = '';
-            document.body.style.overflow = 'auto';
-        }
+        const iframe  = document.getElementById('invoiceFrame');
+        overlay.style.display = 'none';
+        iframe.src = '';
+        document.body.style.overflow = 'auto';
     }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') dismissDetailPopup(); });
 </script>
+
 @endsection
