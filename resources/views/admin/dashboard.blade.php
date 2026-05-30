@@ -11,581 +11,259 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-<style>
-
-    *{
-        font-family:'Poppins',sans-serif;
-    }
-
-    :root{
-        --bg:#0b1120;
-        --card:#111827;
-        --card2:#1a2235;
-        --border:rgba(255,255,255,.06);
-        --text:#f8fafc;
-        --text2:#cbd5e1;
-        --text3:#94a3b8;
-        --green:#34f5a1;
-        --blue:#4ea8ff;
-        --yellow:#facc15;
-        --red:#fb7185;
-        --purple:#a78bfa;
-    }
-
-    .dashboard-wrap{
-        display:flex;
-        flex-direction:column;
-        gap:18px;
-    }
-
-    .topbar-dashboard{
-        display:flex;
-        justify-content:space-between;
-        align-items:flex-start;
-        gap:20px;
-        flex-wrap:wrap;
-    }
-
-    .dashboard-title{
-        font-size:42px;
-        font-weight:800;
-        color:var(--text);
-        line-height:1.1;
-        margin-bottom:8px;
-    }
-
-    .dashboard-subtitle{
-        font-size:14px;
-        color:var(--text3);
-    }
-
-    .dashboard-actions{
-        display:flex;
-        gap:12px;
-        flex-wrap:wrap;
-    }
-
-    .glass-btn{
-        height:44px;
-        padding:0 18px;
-        border-radius:14px;
-        border:1px solid var(--border);
-        background:rgba(255,255,255,.03);
-        color:var(--text);
-        display:flex;
-        align-items:center;
-        gap:10px;
-        font-size:13px;
-        font-weight:700;
-        text-decoration:none;
-        transition:.25s;
-    }
-
-    .glass-btn:hover{
-        transform:translateY(-2px);
-        border-color:rgba(52,245,161,.4);
-        color:white;
-    }
-
-    .glass-btn.green{
-        background:var(--green);
-        color:#08130f;
-        border:none;
-    }
-
-    .stats-grid{
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-        gap:18px;
-    }
-
-    .analytics-card{
-        position:relative;
-        overflow:hidden;
-        background:linear-gradient(145deg,#141c2b,#111827);
-        border:1px solid rgba(52,245,161,.15);
-        border-radius:22px;
-        padding:22px;
-        min-height:180px;
-    }
-
-    .analytics-card::before{
-        content:'';
-        position:absolute;
-        top:-40px;
-        right:-40px;
-        width:110px;
-        height:110px;
-        background:rgba(52,245,161,.10);
-        border-radius:50%;
-    }
-
-    .icon-box{
-        width:42px;
-        height:42px;
-        border-radius:14px;
-        background:rgba(52,245,161,.12);
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        margin-bottom:18px;
-    }
-
-    .icon-box i{
-        color:var(--green);
-        font-size:16px;
-    }
-
-    .analytics-label{
-        color:#7c879f;
-        font-size:12px;
-        font-weight:800;
-        text-transform:uppercase;
-        letter-spacing:.08em;
-        margin-bottom:8px;
-    }
-
-    .analytics-value{
-        color:white;
-        font-size:32px; /* Disesuaikan sedikit agar nominal rupiah ribuan panjang tidak overflow */
-        font-weight:800;
-        line-height:1;
-        margin-bottom:12px;
-    }
-
-    .analytics-growth{
-        color:var(--green);
-        font-size:14px;
-        font-weight:700;
-    }
-
-    .analytics-growth.red{
-        color:var(--red);
-    }
-
-    .progress-modern{
-        width:100%;
-        height:5px;
-        background:rgba(255,255,255,.06);
-        border-radius:999px;
-        overflow:hidden;
-        margin-top:18px;
-    }
-
-    .progress-modern div{
-        height:100%;
-        border-radius:999px;
-        background:var(--green);
-    }
-
-    .content-grid{
-        display:grid;
-        grid-template-columns:1.5fr .8fr;
-        gap:18px;
-    }
-
-    .modern-card{
-        background:linear-gradient(145deg,#141c2b,#111827);
-        border:1px solid var(--border);
-        border-radius:24px;
-        padding:22px;
-    }
-
-    /* HILANGKAN BACKGROUND / SHADOW SVG APEX */
-    .apexcharts-canvas,
-    .apexcharts-svg,
-    .apexcharts-inner,
-    .apexcharts-graphical,
-    .apexcharts-datalabels-group,
-    .apexcharts-legend{
-        background:transparent !important;
-    }
-
-    /* DONUT CLEAN */
-    #facilityChart{
-        display:flex;
-        align-items:center;
-        justify-content:center;
-    }
-
-    #facilityChart .apexcharts-canvas{
-        margin:auto;
-    }
-
-    /* HAPUS BORDER / SHADOW */
-    .apexcharts-tooltip,
-    .apexcharts-xaxistooltip,
-    .apexcharts-yaxistooltip{
-        background:#111827 !important;
-        border:none !important;
-        box-shadow:none !important;
-    }
-
-    .modern-header{
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        margin-bottom:18px;
-    }
-
-    .modern-title{
-        color:white;
-        font-size:28px;
-        font-weight:800;
-    }
-
-    .modern-sub{
-        color:var(--text3);
-        font-size:13px;
-        margin-top:4px;
-    }
-
-    .booking-table{
-        width:100%;
-        border-collapse:collapse;
-    }
-
-    .booking-table th{
-        text-align:left;
-        padding:14px;
-        font-size:12px;
-        color:#7c879f;
-        text-transform:uppercase;
-        border-bottom:1px solid rgba(255,255,255,.05);
-    }
-
-    .booking-table td{
-        padding:16px 14px;
-        border-bottom:1px solid rgba(255,255,255,.04);
-        color:var(--text2);
-        font-size:14px;
-    }
-
-    .booking-id{
-        color:var(--green);
-        font-weight:800;
-        margin-bottom:4px;
-    }
-
-    .booking-user{
-        color:white;
-        font-weight:700;
-    }
-
-    .badge-modern{
-        display:inline-flex;
-        align-items:center;
-        gap:6px;
-        padding:7px 12px;
-        border-radius:999px;
-        font-size:12px;
-        font-weight:700;
-    }
-
-    .badge-green{
-        background:rgba(52,245,161,.15);
-        color:var(--green);
-    }
-
-    .badge-yellow{
-        background:rgba(250,204,21,.12);
-        color:var(--yellow);
-    }
-
-    .badge-blue{
-        background:rgba(78,168,255,.12);
-        color:var(--blue);
-    }
-
-    .badge-red{
-        background:rgba(251,113,133,.12);
-        color:var(--red);
-    }
-
-    .action-group{
-        display:flex;
-        gap:8px;
-    }
-
-    .action-btn{
-        width:34px;
-        height:34px;
-        border:none;
-        border-radius:10px;
-        background:rgba(255,255,255,.05);
-        color:#dbeafe;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        cursor:pointer;
-        transition:.25s;
-    }
-
-    .action-btn:hover{
-        background:rgba(52,245,161,.15);
-        color:var(--green);
-    }
-
-    @media(max-width:1100px){
-        .content-grid{
-            grid-template-columns:1fr;
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: { poppins: ['Poppins', 'sans-serif'] },
+                colors: {
+                    bg:     '#0b1120',
+                    card:   '#111827',
+                    card2:  '#1a2235',
+                    green:  '#34f5a1',
+                    blue:   '#4ea8ff',
+                    yellow: '#facc15',
+                    red:    '#fb7185',
+                    purple: '#a78bfa',
+                },
+            }
         }
     }
+</script>
 
-    @media(max-width:768px){
-        .dashboard-title{
-            font-size:32px;
-        }
-
-        .analytics-value{
-            font-size:34px;
-        }
-
-        .booking-table{
-            min-width:760px;
-        }
-
-        .table-scroll{
-            overflow:auto;
-        }
-    }
-
-</style>
-
-<div class="dashboard-wrap">
+<div class="font-poppins flex flex-col gap-[18px]">
 
     {{-- HEADER --}}
-    <div class="topbar-dashboard">
+    <div class="flex justify-between items-start gap-5 flex-wrap">
         <div>
-            <div class="dashboard-title">
+            <div class="text-[42px] font-extrabold text-white leading-tight mb-2">
                 Dashboard Ringkasan
             </div>
-            <div class="dashboard-subtitle">
+            <div class="text-sm text-slate-400">
                 Selamat datang kembali,
-                <strong style="color:white;">
-                    {{ auth()->user()->name }}
-                </strong>.
+                <strong class="text-white">{{ auth()->user()->name }}</strong>.
                 Berikut statistik arena hari ini.
             </div>
         </div>
-
-        <div class="dashboard-actions">
-            <a href="#" class="glass-btn">
-                <i class="fa-regular fa-file-pdf"></i>
-                Ekspor PDF
+        <div class="flex gap-3 flex-wrap">
+            <a href="#"
+                class="h-11 px-[18px] rounded-[14px] border border-white/[0.06] bg-white/[0.03] text-white flex items-center gap-2.5 text-[13px] font-bold no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-green/40">
+                <i class="fa-regular fa-file-pdf"></i> Ekspor PDF
             </a>
-            <a href="#" class="glass-btn">
-                <i class="fa-regular fa-file-excel"></i>
-                Ekspor Excel
+            <a href="#"
+                class="h-11 px-[18px] rounded-[14px] border border-white/[0.06] bg-white/[0.03] text-white flex items-center gap-2.5 text-[13px] font-bold no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-green/40">
+                <i class="fa-regular fa-file-excel"></i> Ekspor Excel
             </a>
-            <a href="{{ route('admin.booking.index') }}" class="glass-btn green">
+            <a href="{{ route('admin.booking.index') }}"
+                class="h-11 px-[18px] rounded-[14px] bg-green text-[#08130f] flex items-center gap-2.5 text-[13px] font-bold no-underline transition-all duration-300 hover:-translate-y-0.5">
                 + New Booking
             </a>
         </div>
     </div>
 
-    {{-- CARD STATS --}}
-    <div class="stats-grid">
+    {{-- STAT CARDS --}}
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-[18px]">
 
-        {{-- PENDAPATAN (FIX RUPIAH REAL) --}}
-        <div class="analytics-card">
-            <div class="icon-box">
-                <i class="fa-solid fa-sack-dollar"></i>
+        {{-- Pendapatan --}}
+        <div class="relative overflow-hidden bg-gradient-to-br from-[#141c2b] to-[#111827] border border-green/[0.15] rounded-[22px] p-[22px] min-h-[180px]">
+            <div class="absolute -top-10 -right-10 w-[110px] h-[110px] bg-green/10 rounded-full"></div>
+            <div class="w-[42px] h-[42px] rounded-[14px] bg-green/[0.12] flex items-center justify-center mb-[18px]">
+                <i class="fa-solid fa-sack-dollar text-green text-base"></i>
             </div>
-            <div class="analytics-label">
-                Total Pendapatan
-            </div>
-            <div class="analytics-value">
+            <div class="text-[#7c879f] text-[12px] font-extrabold uppercase tracking-[0.08em] mb-2">Total Pendapatan</div>
+            <div class="text-white text-[32px] font-extrabold leading-none mb-3">
                 Rp {{ number_format($totalPendapatan, 0, ',', '.') }}
             </div>
-            <div class="analytics-growth">
-                ↑ {{ number_format($persenPendapatan,1) }}% bulan ini
-            </div>
-            <div class="progress-modern">
-                <div style="width:72%"></div>
+            <div class="text-green text-sm font-bold">↑ {{ number_format($persenPendapatan,1) }}% bulan ini</div>
+            <div class="w-full h-[5px] bg-white/[0.06] rounded-full overflow-hidden mt-[18px]">
+                <div class="h-full rounded-full bg-green" style="width:72%"></div>
             </div>
         </div>
 
-        {{-- USER --}}
-        <div class="analytics-card">
-            <div class="icon-box">
-                <i class="fa-solid fa-users"></i>
+        {{-- Pengguna --}}
+        <div class="relative overflow-hidden bg-gradient-to-br from-[#141c2b] to-[#111827] border border-green/[0.15] rounded-[22px] p-[22px] min-h-[180px]">
+            <div class="absolute -top-10 -right-10 w-[110px] h-[110px] bg-green/10 rounded-full"></div>
+            <div class="w-[42px] h-[42px] rounded-[14px] bg-green/[0.12] flex items-center justify-center mb-[18px]">
+                <i class="fa-solid fa-users text-green text-base"></i>
             </div>
-            <div class="analytics-label">
-                Pengguna Aktif
-            </div>
-            <div class="analytics-value">
-                {{ $totalUsers }}
-            </div>
-            <div class="analytics-growth">
-                User terdaftar aktif
-            </div>
-            <div class="progress-modern">
-                <div style="width:82%"></div>
+            <div class="text-[#7c879f] text-[12px] font-extrabold uppercase tracking-[0.08em] mb-2">Pengguna Aktif</div>
+            <div class="text-white text-[32px] font-extrabold leading-none mb-3">{{ $totalUsers }}</div>
+            <div class="text-green text-sm font-bold">User terdaftar aktif</div>
+            <div class="w-full h-[5px] bg-white/[0.06] rounded-full overflow-hidden mt-[18px]">
+                <div class="h-full rounded-full bg-green" style="width:82%"></div>
             </div>
         </div>
 
-        {{-- BOOKING --}}
-        <div class="analytics-card">
-            <div class="icon-box">
-                <i class="fa-solid fa-calendar-check"></i>
+        {{-- Booking --}}
+        <div class="relative overflow-hidden bg-gradient-to-br from-[#141c2b] to-[#111827] border border-green/[0.15] rounded-[22px] p-[22px] min-h-[180px]">
+            <div class="absolute -top-10 -right-10 w-[110px] h-[110px] bg-green/10 rounded-full"></div>
+            <div class="w-[42px] h-[42px] rounded-[14px] bg-green/[0.12] flex items-center justify-center mb-[18px]">
+                <i class="fa-solid fa-calendar-check text-green text-base"></i>
             </div>
-            <div class="analytics-label">
-                Total Booking
-            </div>
-            <div class="analytics-value">
-                {{ $totalBooking }}
-            </div>
-            <div class="analytics-growth">
-                ↑ {{ number_format($persenBooking,1) }}% bulan ini
-            </div>
-            <div class="progress-modern">
-                <div style="width:58%"></div>
+            <div class="text-[#7c879f] text-[12px] font-extrabold uppercase tracking-[0.08em] mb-2">Total Booking</div>
+            <div class="text-white text-[32px] font-extrabold leading-none mb-3">{{ $totalBooking }}</div>
+            <div class="text-green text-sm font-bold">↑ {{ number_format($persenBooking,1) }}% bulan ini</div>
+            <div class="w-full h-[5px] bg-white/[0.06] rounded-full overflow-hidden mt-[18px]">
+                <div class="h-full rounded-full bg-green" style="width:58%"></div>
             </div>
         </div>
 
-        {{-- OKUPANSI --}}
-        <div class="analytics-card">
-            <div class="icon-box">
-                <i class="fa-solid fa-building"></i>
+        {{-- Okupansi + Perlu Tindakan --}}
+        <div class="relative overflow-hidden bg-gradient-to-br from-[#141c2b] to-[#111827] border border-green/[0.15] rounded-[22px] p-[22px] min-h-[180px]">
+            <div class="absolute -top-10 -right-10 w-[110px] h-[110px] bg-green/10 rounded-full"></div>
+
+            {{-- Atas: Okupansi --}}
+            <div class="w-[42px] h-[42px] rounded-[14px] bg-green/[0.12] flex items-center justify-center mb-[18px]">
+                <i class="fa-solid fa-building text-green text-base"></i>
             </div>
-            <div class="analytics-label">
-                Okupansi Lapangan
+            <div class="text-[#7c879f] text-[12px] font-extrabold uppercase tracking-[0.08em] mb-2">Okupansi Lapangan</div>
+            <div class="text-white text-[32px] font-extrabold leading-none mb-2">
+                {{ number_format($okupansi, 0) }}%
             </div>
-            <div class="analytics-value">
-                {{ number_format($okupansi,0) }}%
+            <div class="w-full h-[4px] bg-white/[0.06] rounded-full overflow-hidden mb-4">
+                <div class="h-full rounded-full bg-green" style="width:{{ $okupansi }}%"></div>
             </div>
-            <div class="analytics-growth red">
-                {{ $pendingPembayaran }} pembayaran pending
+
+            {{-- Divider --}}
+            <div class="border-t border-white/[0.06] mb-4"></div>
+
+            {{-- Bawah: Data Pending --}}
+            <div class="text-[#7c879f] text-[11px] font-extrabold uppercase tracking-[0.08em] mb-3">Data Pending</div>
+
+            {{-- 2 angka kiri-kanan --}}
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <div>
+                    <div class="text-[#7c879f] text-[10px] font-bold uppercase tracking-wider mb-1">Verif DP</div>
+                    <div class="text-[22px] font-extrabold leading-none {{ $pendingPembayaran > 0 ? 'text-yellow' : 'text-green' }}">
+                        {{ $pendingPembayaran }}
+                    </div>
+                </div>
+                <div>
+                    <div class="text-[#7c879f] text-[10px] font-bold uppercase tracking-wider mb-1">Booking Baru</div>
+                    <div class="text-[22px] font-extrabold leading-none {{ $bookingMenunggu > 0 ? 'text-red' : 'text-green' }}">
+                        {{ $bookingMenunggu }}
+                    </div>
+                </div>
             </div>
-            <div class="progress-modern">
-                <div style="width:{{ $okupansi }}%"></div>
+
+            {{-- 1 progress bar gabungan --}}
+            @php
+                $totalTindakan = $pendingPembayaran + $bookingMenunggu;
+                $barColor = $totalTindakan === 0 ? 'bg-green' : ($pendingPembayaran > $bookingMenunggu ? 'bg-yellow' : 'bg-red');
+                $barWidth = min($totalTindakan * 10, 100);
+            @endphp
+            <div class="w-full h-[4px] bg-white/[0.06] rounded-full overflow-hidden">
+                <div class="h-full rounded-full {{ $barColor }}"
+                    style="width:{{ $totalTindakan === 0 ? 10 : $barWidth }}%"></div>
             </div>
         </div>
 
     </div>
 
     {{-- CHART AREA --}}
-    <div class="content-grid">
+    <div class="grid grid-cols-[1.5fr_0.8fr] gap-[18px] max-[1100px]:grid-cols-1">
 
-        {{-- LINE CHART --}}
-        <div class="modern-card">
-            <div class="modern-header">
+        {{-- Line Chart --}}
+        <div class="bg-gradient-to-br from-[#141c2b] to-[#111827] border border-white/[0.06] rounded-[24px] p-[22px]">
+            <div class="flex justify-between items-center mb-[18px]">
                 <div>
-                    <div class="modern-title">
-                        Tren Pendapatan & Booking
-                    </div>
-                    <div class="modern-sub">
-                        7 hari terakhir
-                    </div>
+                    <div class="text-white text-[28px] font-extrabold">Tren Pendapatan & Booking</div>
+                    <div class="text-slate-400 text-[13px] mt-1">7 hari terakhir</div>
                 </div>
             </div>
             <div id="realtimeChart" style="height:320px;"></div>
         </div>
 
-        {{-- DONUT --}}
-        <div class="modern-card">
-            <div class="modern-header">
+        {{-- Donut Chart --}}
+        <div class="bg-gradient-to-br from-[#141c2b] to-[#111827] border border-white/[0.06] rounded-[24px] p-[22px]">
+            <div class="flex justify-between items-center mb-[18px]">
                 <div>
-                    <div class="modern-title" style="font-size:22px;">
-                        Distribusi Fasilitas
-                    </div>
-                    <div class="modern-sub">
-                        Berdasarkan jenis fasilitas
-                    </div>
+                    <div class="text-white text-[22px] font-extrabold">Distribusi Fasilitas</div>
+                    <div class="text-slate-400 text-[13px] mt-1">Berdasarkan jenis fasilitas</div>
                 </div>
             </div>
-            <div id="facilityChart" style="height:320px;"></div>
+            <div id="facilityChart" class="flex items-center justify-center" style="height:320px;"></div>
         </div>
 
     </div>
 
     {{-- TABLE RECENT --}}
-    <div class="modern-card">
-        <div class="modern-header">
+    <div class="bg-gradient-to-br from-[#141c2b] to-[#111827] border border-white/[0.06] rounded-[24px] p-[22px]">
+        <div class="flex justify-between items-center mb-[18px]">
             <div>
-                <div class="modern-title" style="font-size:28px;">
-                    Booking Terbaru
-                </div>
-                <div class="modern-sub">
-                    5 transaksi terakhir
-                </div>
+                <div class="text-white text-[28px] font-extrabold">Booking Terbaru</div>
+                <div class="text-slate-400 text-[13px] mt-1">5 transaksi terakhir</div>
             </div>
-            <a href="{{ route('admin.booking.index') }}" class="glass-btn">
+            <a href="{{ route('admin.booking.index') }}"
+                class="h-11 px-[18px] rounded-[14px] border border-white/[0.06] bg-white/[0.03] text-white flex items-center gap-2.5 text-[13px] font-bold no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-green/40">
                 Lihat Semua →
             </a>
         </div>
 
-        <div class="table-scroll">
-            <table class="booking-table">
+        <div class="overflow-auto">
+            <table class="w-full border-collapse min-w-[760px]">
                 <thead>
                     <tr>
-                        <th>ID / Pemesan</th>
-                        <th>Fasilitas</th>
-                        <th>Jadwal</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
+                        <th class="text-left px-3.5 py-3.5 text-[12px] text-[#7c879f] uppercase border-b border-white/[0.05]">ID / Pemesan</th>
+                        <th class="text-left px-3.5 py-3.5 text-[12px] text-[#7c879f] uppercase border-b border-white/[0.05]">Fasilitas</th>
+                        <th class="text-left px-3.5 py-3.5 text-[12px] text-[#7c879f] uppercase border-b border-white/[0.05]">Jadwal</th>
+                        <th class="text-left px-3.5 py-3.5 text-[12px] text-[#7c879f] uppercase border-b border-white/[0.05]">Status</th>
+                        <th class="text-left px-3.5 py-3.5 text-[12px] text-[#7c879f] uppercase border-b border-white/[0.05]">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($recentBookings as $booking)
                         <tr>
-                            <td>
-                                <div class="booking-id">
+                            <td class="px-3.5 py-4 border-b border-white/[0.04] text-slate-300 text-sm">
+                                <div class="text-green font-extrabold mb-1">
                                     #{{ strtoupper(substr($booking->kode_booking,-6)) }}
                                 </div>
-                                <div class="booking-user">
-                                    {{ $booking->user->name }}
-                                </div>
+                                <div class="text-white font-bold">{{ $booking->user->name }}</div>
                             </td>
-                            <td>
+                            <td class="px-3.5 py-4 border-b border-white/[0.04] text-slate-300 text-sm">
                                 {{ $booking->detailBooking->first()?->fasilitas?->nama ?? '-' }}
                             </td>
-                            <td>
+                            <td class="px-3.5 py-4 border-b border-white/[0.04] text-slate-300 text-sm">
                                 {{ \Carbon\Carbon::parse($booking->created_at)->translatedFormat('d M Y, H:i') }}
                             </td>
-                            <td>
+                            <td class="px-3.5 py-4 border-b border-white/[0.04]">
                                 @php
-                                    $status = match($booking->status_booking){
-                                        'menunggu' => 'badge-yellow',
-                                        'dikonfirmasi' => 'badge-green',
-                                        'dibatalkan' => 'badge-red',
-                                        default => 'badge-blue'
+                                    $statusClass = match($booking->status_booking){
+                                        'menunggu'     => 'bg-yellow/[0.12] text-yellow',
+                                        'dikonfirmasi' => 'bg-green/[0.15] text-green',
+                                        'dibatalkan'   => 'bg-red/[0.12] text-red',
+                                        default        => 'bg-blue/[0.12] text-blue',
+                                    };
+                                    $statusLabel = match($booking->status_booking){
+                                        'menunggu'     => '● Pending',
+                                        'dikonfirmasi' => '● Verified',
+                                        'dibatalkan'   => '● Cancelled',
+                                        default        => '● Active',
                                     };
                                 @endphp
-
-                                <span class="badge-modern {{ $status }}">
-                                    @if($booking->status_booking == 'menunggu')
-                                        ● Pending
-                                    @elseif($booking->status_booking == 'dikonfirmasi')
-                                        ● Verified
-                                    @elseif($booking->status_booking == 'dibatalkan')
-                                        ● Cancelled
-                                    @else
-                                        ● Active
-                                    @endif
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-bold {{ $statusClass }}">
+                                    {{ $statusLabel }}
                                 </span>
                             </td>
-                            <td>
-                                <div class="action-group">
-                                    <button class="action-btn">
-                                        <i class="fa-solid fa-pen"></i>
+                            <td class="px-3.5 py-4 border-b border-white/[0.04]">
+                                <div class="flex gap-2">
+                                    <button class="w-[34px] h-[34px] border-none rounded-[10px] bg-white/[0.05] text-blue-200 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-green/[0.15] hover:text-green">
+                                        <i class="fa-solid fa-pen text-xs"></i>
                                     </button>
-                                    <button class="action-btn">
-                                        <i class="fa-solid fa-eye"></i>
+                                    <button class="w-[34px] h-[34px] border-none rounded-[10px] bg-white/[0.05] text-blue-200 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-green/[0.15] hover:text-green">
+                                        <i class="fa-solid fa-eye text-xs"></i>
                                     </button>
-                                    <button class="action-btn">
-                                        <i class="fa-solid fa-trash"></i>
+                                    <button class="w-[34px] h-[34px] border-none rounded-[10px] bg-white/[0.05] text-blue-200 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-green/[0.15] hover:text-green">
+                                        <i class="fa-solid fa-trash text-xs"></i>
                                     </button>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" style="text-align:center; padding:40px;">
+                            <td colspan="5" class="text-center py-10 text-slate-400">
                                 Belum ada booking
                             </td>
                         </tr>
@@ -597,108 +275,59 @@
 
 </div>
 
-{{-- CONFIGURATION SCRIPT APEXCHARTS --}}
+{{-- APEXCHARTS SCRIPT --}}
 <script>
     const bookingData = @json($bookingChart);
-    const incomeData = @json($incomeChart);
+    const incomeData  = @json($incomeChart);
 
-    const categories = bookingData.map(item => item.tanggal);
+    const categories   = bookingData.map(item => item.tanggal);
     const bookingSeries = bookingData.map(item => item.total);
+    const incomeSeries  = incomeData.map(item => parseFloat(item.total));
 
-    // FIX: Parsing nominal integer murni tanpa pembulatan string area
-    const incomeSeries = incomeData.map(item => parseFloat(item.total));
-
-    /* LINE & AREA CHART CONFIG */
-    const options = {
-        chart: {
-            type: 'area',
-            height: 320,
-            toolbar: { show: false },
-            background: 'transparent'
-        },
+    new ApexCharts(document.querySelector("#realtimeChart"), {
+        chart: { type: 'area', height: 320, toolbar: { show: false }, background: 'transparent' },
         theme: { mode: 'dark' },
         colors: ['#34f5a1','#4ea8ff'],
         series: [
-            {
-                name: 'Pendapatan',
-                data: incomeSeries
-            },
-            {
-                name: 'Booking',
-                data: bookingSeries
-            }
+            { name: 'Pendapatan', data: incomeSeries },
+            { name: 'Booking',    data: bookingSeries }
         ],
         stroke: { curve: 'smooth', width: 4 },
-        fill: {
-            type: 'gradient',
-            gradient: {
-                opacityFrom: 0.45,
-                opacityTo: 0.05
-            }
-        },
+        fill: { type: 'gradient', gradient: { opacityFrom: 0.45, opacityTo: 0.05 } },
         dataLabels: { enabled: false },
         grid: { borderColor: 'rgba(255,255,255,.06)' },
-        xaxis: {
-            categories: categories,
-            labels: { style: { colors: '#94a3b8' } }
-        },
+        xaxis: { categories, labels: { style: { colors: '#94a3b8' } } },
         yaxis: {
             labels: {
                 style: { colors: '#94a3b8' },
-                // FIX: Menampilkan format rupiah dinamis pada sumbu Y grafik
-                formatter: function (value) {
-                    return "Rp " + value.toLocaleString('id-ID');
-                }
+                formatter: v => "Rp " + v.toLocaleString('id-ID')
             }
         },
-        // FIX: Tooltip Pop-up memunculkan format rupiah asli saat kursor digeser
         tooltip: {
             theme: 'dark',
             y: {
-                formatter: function(value, { seriesIndex }) {
-                    if(seriesIndex === 0) {
-                        return "Rp " + value.toLocaleString('id-ID');
-                    }
-                    return value + " Booking";
-                }
+                formatter: (v, { seriesIndex }) =>
+                    seriesIndex === 0
+                        ? "Rp " + v.toLocaleString('id-ID')
+                        : v + " Booking"
             }
         },
         legend: { labels: { colors: '#cbd5e1' } }
-    };
+    }).render();
 
-    new ApexCharts(document.querySelector("#realtimeChart"), options).render();
-
-    /* DONUT CHART CONFIG */
     const facilityData = @json($facilityChart);
-    const facilitySeries = facilityData.map(item => item.total);
-    const facilityLabels = facilityData.map(item => item.jenis);
-
-    const donutOptions = {
-        chart: {
-            type: 'donut',
-            height: 320,
-            background: 'transparent'
-        },
-        series: facilitySeries,
-        labels: facilityLabels,
+    new ApexCharts(document.querySelector("#facilityChart"), {
+        chart: { type: 'donut', height: 320, background: 'transparent' },
+        series: facilityData.map(i => i.total),
+        labels:  facilityData.map(i => i.jenis),
         theme: { mode: 'dark' },
-        colors: ['#34f5a1', '#4ea8ff', '#facc15', '#a78bfa', '#fb7185'],
+        colors: ['#34f5a1','#4ea8ff','#facc15','#a78bfa','#fb7185'],
         stroke: { width: 0 },
-        plotOptions: {
-            pie: {
-                donut: { size: '72%' }
-            }
-        },
-        legend: {
-            position: 'bottom',
-            fontSize: '13px',
-            labels: { colors: '#cbd5e1' }
-        },
+        plotOptions: { pie: { donut: { size: '72%' } } },
+        legend: { position: 'bottom', fontSize: '13px', labels: { colors: '#cbd5e1' } },
         dataLabels: { enabled: false },
         tooltip: { theme: 'dark' }
-    };
-
-    new ApexCharts(document.querySelector("#facilityChart"), donutOptions).render();
+    }).render();
 </script>
 
 @endsection

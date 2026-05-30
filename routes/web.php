@@ -1,20 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController;
-
+use App\Http\Controllers\Admin\BookingController;
 /*
 |--------------------------------------------------------------------------
 | CONTROLLER ADMIN
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\BookingController;
-use App\Http\Controllers\Admin\FasilitasController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FasilitasController; // Sudah Terimport
 use App\Http\Controllers\Admin\JadwalController;
+use App\Http\Controllers\Admin\PembayaranController;
 use App\Http\Controllers\Admin\UserController;
-
+use App\Http\Controllers\Auth\ForgotPasswordOtpController;
+use App\Http\Controllers\Admin\SearchController;
 /*
 |--------------------------------------------------------------------------
 | CONTROLLER AUTH
@@ -22,7 +20,7 @@ use App\Http\Controllers\Admin\UserController;
 */
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\ForgotPasswordOtpController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +47,7 @@ Route::get('/', function () {
 | AUTH BREEZE (Login, Logout, dll)
 |--------------------------------------------------------------------------
 */
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +77,9 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/dashboard', [AdminDashboardController::class, 'admin'])
             ->name('dashboard');
 
+        Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+        // --- FASILITAS ---
         Route::resource('fasilitas', FasilitasController::class)
             ->parameters(['fasilitas' => 'fasilitas']);
 
@@ -94,9 +95,9 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('booking/{booking}/status', [BookingController::class, 'updateStatus'])
             ->name('booking.updateStatus');
 
-        Route::get('/pembayaran', function () {
-            return 'Coming Soon Pembayaran';
-        })->name('pembayaran.index');
+        Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+        Route::patch('/pembayaran/{pembayaran}/verifikasi-dp', [PembayaranController::class, 'verifikasiDp'])->name('pembayaran.verifikasi-dp');
+        Route::patch('/pembayaran/{pembayaran}/verifikasi-lunas', [PembayaranController::class, 'verifikasiLunas'])->name('pembayaran.verifikasi-lunas');
 
         Route::get('/laporan', function () {
             return 'Coming Soon Laporan';
