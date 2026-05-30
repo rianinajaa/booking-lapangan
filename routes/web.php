@@ -39,8 +39,8 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback'])
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    return view('welcome');
+})->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +48,21 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 require __DIR__.'/auth.php';
+
+/*
+|--------------------------------------------------------------------------
+| USER DASHBOARD & PROFILE (Untuk semua user yang sudah login)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
+    // Dashboard User (halaman utama setelah login)
+    Route::get('/dashboard', [DashboardController::class, 'user'])->name('dashboard');
+    
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -59,8 +74,7 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
-        // --- DASHBOARD ---
-        Route::get('/dashboard', [DashboardController::class, 'admin'])
+        Route::get('/dashboard', [AdminDashboardController::class, 'admin'])
             ->name('dashboard');
 
         Route::get('/search', [SearchController::class, 'search'])->name('search');
@@ -72,15 +86,11 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('fasilitas/{fasilitas}/toggle-status', [FasilitasController::class, 'toggleStatus'])
             ->name('fasilitas.toggle-status');
 
-        // --- JADWAL ---
         Route::resource('jadwal', JadwalController::class)->except(['show']);
         Route::patch('jadwal/{jadwal}/toggle', [JadwalController::class, 'toggleLibur'])
             ->name('jadwal.toggle');
 
-        // --- USER MANAGEMENT ---
         Route::resource('users', UserController::class);
-
-        // --- BOOKING MANAGEMENT ---
         Route::resource('booking', BookingController::class);
         Route::patch('booking/{booking}/status', [BookingController::class, 'updateStatus'])
             ->name('booking.updateStatus');
@@ -89,11 +99,9 @@ Route::middleware(['auth', 'role:admin'])
         Route::patch('/pembayaran/{pembayaran}/verifikasi-dp', [PembayaranController::class, 'verifikasiDp'])->name('pembayaran.verifikasi-dp');
         Route::patch('/pembayaran/{pembayaran}/verifikasi-lunas', [PembayaranController::class, 'verifikasiLunas'])->name('pembayaran.verifikasi-lunas');
 
-        // --- LAPORAN (Masih Placeholder) ---
         Route::get('/laporan', function () {
             return 'Coming Soon Laporan';
         })->name('laporan.index');
-
     });
 
 /*
@@ -105,23 +113,19 @@ Route::middleware(['auth', 'role:guru'])
     ->prefix('guru')
     ->name('guru.')
     ->group(function () {
-        Route::get('/dashboard', function () {
-            return 'Dashboard Guru';
-        })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'guru'])->name('dashboard');
     });
 
 /*
 |--------------------------------------------------------------------------
-| ROLE: USER (Umum, Siswa)
+| ROLE: USER (Umum, Siswa) - REDIRECT ke dashboard user
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:umum,siswa_internal,siswa_luar'])
     ->prefix('user')
     ->name('user.')
     ->group(function () {
-        Route::get('/dashboard', function () {
-            return 'Dashboard User';
-        })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'user'])->name('dashboard');
     });
 
 /*
@@ -129,7 +133,6 @@ Route::middleware(['auth', 'role:umum,siswa_internal,siswa_luar'])
 | REGISTER & FORGOT PASSWORD OTP
 |--------------------------------------------------------------------------
 */
-// Register OTP
 Route::get('/register/verify', [RegisteredUserController::class, 'showOtpForm'])->name('register.otp.form');
 Route::post('/register/verify', [RegisteredUserController::class, 'verifyOtp'])->name('register.otp.verify');
 Route::post('/register/resend', [RegisteredUserController::class, 'resendOtp'])->name('register.resend');
@@ -137,7 +140,6 @@ Route::get('/register/verified', function () {
     return view('auth.verified-popup');
 })->middleware('auth')->name('register.verified');
 
-// Forgot Password OTP
 Route::get('/forgot-password', [ForgotPasswordOtpController::class, 'showEmailForm'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordOtpController::class, 'sendOtp'])->name('password.send-otp');
 Route::get('/forgot-password/otp', [ForgotPasswordOtpController::class, 'showOtpForm'])->name('password.otp.form');
@@ -146,7 +148,6 @@ Route::get('/forgot-password/new', [ForgotPasswordOtpController::class, 'showNew
 Route::post('/forgot-password/new', [ForgotPasswordOtpController::class, 'updatePassword'])->name('password.update');
 Route::post('/forgot-password/resend', [ForgotPasswordOtpController::class, 'resendOtp'])->name('password.resend');
 
-// Password Changed Notification
 Route::get('/password-changed', function () {
     return view('auth.password-changed');
 })->name('password.changed');
