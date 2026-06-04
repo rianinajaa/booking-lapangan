@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 | GOOGLE OAUTH
 |--------------------------------------------------------------------------
 */
+
 Route::get('/auth/google', [GoogleController::class, 'redirect'])
     ->name('auth.google');
 
@@ -52,7 +53,7 @@ Route::get('/', function () {
 | AUTH BREEZE (Login, Logout, dll)
 |--------------------------------------------------------------------------
 */
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
 });
 
 /*

@@ -146,6 +146,10 @@
             font-family: 'Outfit', sans-serif;
         }
 
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
         .glass-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, .05) 0%, rgba(5, 150, 105, .05) 100%);
             border: 1px solid rgba(133, 248, 195, .2);
