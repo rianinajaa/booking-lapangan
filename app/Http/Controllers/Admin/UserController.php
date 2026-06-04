@@ -26,7 +26,7 @@ class UserController extends Controller
                       ->orWhere('email', 'like', "%{$search}%");
             })
             ->latest()
-            ->get();
+            ->paginate(12); // Ubah jadi paginate agar tidak terlalu banyak data
 
         return view('admin.users.index', compact('users'));
     }
@@ -96,12 +96,32 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Data user berhasil diubah!');
     }
 
-    // DELETE (Menghapus User)
+    // DELETE (Menghapus User) - DENGAN PROTEKSI AKUN SENDIRI
     public function destroy($id)
     {
+        // Cegah admin menghapus akun sendiri
+        if (auth()->id() == $id) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Anda tidak dapat menghapus akun sendiri!');
+        }
+
         $user = User::findOrFail($id);
+        
+        // Cek apakah user yang akan dihapus adalah admin
+        if ($user->role === 'admin') {
+            // Hitung jumlah admin yang tersisa setelah penghapusan
+            $adminCount = User::where('role', 'admin')->count();
+            
+            // Jika hanya 1 admin yang tersisa (yaitu user yang akan dihapus)
+            if ($adminCount <= 1) {
+                return redirect()->route('admin.users.index')
+                    ->with('error', 'Tidak dapat menghapus admin terakhir! Minimal harus ada satu admin.');
+            }
+        }
+        
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus!');
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User berhasil dihapus!');
     }
 }

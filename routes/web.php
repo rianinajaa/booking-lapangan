@@ -6,13 +6,13 @@ use App\Http\Controllers\Admin\BookingController;
 | CONTROLLER ADMIN
 |--------------------------------------------------------------------------
 */
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\FasilitasController; // Sudah Terimport
 use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\PembayaranController;
+use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\ForgotPasswordOtpController;
-use App\Http\Controllers\Admin\SearchController;
 /*
 |--------------------------------------------------------------------------
 | CONTROLLER AUTH
@@ -38,6 +38,11 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback'])
 | HALAMAN AWAL
 |--------------------------------------------------------------------------
 */
+
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserBookingController;
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -55,9 +60,7 @@ require __DIR__.'/auth.php';
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
-    // Dashboard User (halaman utama setelah login)
-    Route::get('/dashboard', [DashboardController::class, 'user'])->name('dashboard');
-    
+
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -92,12 +95,17 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::resource('users', UserController::class);
         Route::resource('booking', BookingController::class);
+        Route::patch('booking/{booking}/konfirmasi', [BookingController::class, 'konfirmasiBooking'])
+            ->name('booking.konfirmasi');
         Route::patch('booking/{booking}/status', [BookingController::class, 'updateStatus'])
             ->name('booking.updateStatus');
 
         Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
-        Route::patch('/pembayaran/{pembayaran}/verifikasi-dp', [PembayaranController::class, 'verifikasiDp'])->name('pembayaran.verifikasi-dp');
-        Route::patch('/pembayaran/{pembayaran}/verifikasi-lunas', [PembayaranController::class, 'verifikasiLunas'])->name('pembayaran.verifikasi-lunas');
+        Route::get('/pembayaran/{pembayaran}', [PembayaranController::class, 'show'])->name('pembayaran.show');
+        Route::post('/pembayaran/{pembayaran}/verifikasi-dp', [PembayaranController::class, 'verifikasiDp'])->name('pembayaran.verifikasi-dp');
+        Route::post('/pembayaran/{pembayaran}/verifikasi-lunas', [PembayaranController::class, 'verifikasiLunas'])->name('pembayaran.verifikasi-lunas');
+        Route::post('/pembayaran/{pembayaran}/tolak', [PembayaranController::class, 'tolakPembayaran'])->name('pembayaran.tolak');
+        Route::delete('/pembayaran/{pembayaran}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
 
         Route::get('/laporan', function () {
             return 'Coming Soon Laporan';
@@ -106,26 +114,26 @@ Route::middleware(['auth', 'role:admin'])
 
 /*
 |--------------------------------------------------------------------------
-| ROLE: GURU
+| ROLE: USER + GURU (digabung, prefix /user)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:guru'])
-    ->prefix('guru')
-    ->name('guru.')
-    ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'guru'])->name('dashboard');
-    });
-
-/*
-|--------------------------------------------------------------------------
-| ROLE: USER (Umum, Siswa) - REDIRECT ke dashboard user
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'role:umum,siswa_internal,siswa_luar'])
+Route::middleware(['auth', 'role:umum,siswa_internal,siswa_luar,guru'])
     ->prefix('user')
     ->name('user.')
     ->group(function () {
+
+        // Dashboard (DashboardController@user sudah pass $fasilitas)
         Route::get('/dashboard', [DashboardController::class, 'user'])->name('dashboard');
+
+        // AJAX slots
+        Route::get('/fasilitas/{fasilitas}/slots', [UserBookingController::class, 'slots'])->name('fasilitas.slots');
+
+        // Booking
+        Route::get('/booking', [UserBookingController::class, 'index'])->name('booking.index');
+        Route::get('/booking/create', [UserBookingController::class, 'create'])->name('booking.create');
+        Route::post('/booking', [UserBookingController::class, 'store'])->name('booking.store');
+        Route::get('/booking/{booking}', [UserBookingController::class, 'show'])->name('booking.show');
+        Route::delete('/booking/{booking}/cancel', [UserBookingController::class, 'cancel'])->name('booking.cancel'); // ⭐ DELETE method
     });
 
 /*

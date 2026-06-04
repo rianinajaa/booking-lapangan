@@ -168,97 +168,79 @@
                                     Pilih Fasilitas
                                     @if ($isFacilityLocked)
                                         <span class="text-sm text-primary ml-2">(Telah dipilih)</span>
+                                        <button type="button" id="btnAddMoreFacility"
+                                            class="ml-2 text-primary hover:bg-primary/10 rounded-full p-1 transition"
+                                            title="Tambah fasilitas lain">
+                                            <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                                        </button>
                                     @endif
                                 </h2>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-md" id="facility-grid">
-                                @foreach ($fasilitas as $f)
-                                    @php
-                                        $isPreselected = $preselectedFacilityId == $f->id;
-                                    @endphp
-
-                                    {{-- Kalau locked, skip semua kecuali yang dipilih --}}
-                                    @if ($isFacilityLocked && !$isPreselected)
-                                        @continue
-                                    @endif
-
-                                    @php
-                                        $imgMap = [
-                                            'lapangan basket' =>
-                                                'https://lh3.googleusercontent.com/aida-public/AB6AXuDNJpzQVFK10JoitqYur2pF5zZSYLmqokntLma3j23vnkgtNEjDyQpfFJIz3cX2qGVIVzq-r33xAjTQPDKlmjImtpOrY9xFAO79jpUNhtKeKry6HhKb9R_k-5zAGDl_03IdQhtdRet3Ke-IucMlkzUKnz9RAxjK8pLkIvGgyeBXgrk8t35unFBJ61swwRgzQs8m0QMGQruVS8FjSTEdvvpdsjY7ETspQpuyhjA8GvyKtTl91zhgi3UfCtBbqDuim3DrBha38PBVGeA',
-                                            'lapangan voli' =>
-                                                'https://lh3.googleusercontent.com/aida-public/AB6AXuAaZ8iWdmGEFA7P7BmJCGt0-4brBKMODWhntpd3xpdUCZDMJfIJYryNP9U9qOBKBoh4bYOCxUzxt_Jw2px3gHDFM9qSR3h5SVVtSzyN01kHidWYW8q0O4InRPFgXNUJ-pJ6u4wlZOdqkm6BcCsx26vLpFJoaKSfB3-p5GrsGaYLqUzZe7_RmcXWNZ0e-IZZQIYoVgQeqROeRRETtHq1WdbY2XgAoGU7e6TbMtjTMac1UjMLPLMQgYuedofxG6YSd2jpyM7DZYBWXZs',
-                                            'futsal indoor' =>
-                                                'https://lh3.googleusercontent.com/aida-public/AB6AXuCuypwVzw_jZ3uJil6R_Yu6JDbPxm5oQQuChKb2MFJMyhYR3ntLzswcPBZIWdHPpLQtrjsIH8WC6YDllHXaj8Nu4iziClPz1zbi1na601oeXtcJMzG7IpYwfkHZlFgatmxjOHOHNhRYaKU3zw00woYWYIvGhBuoSLoGOyw38aqVKbLCZ7YYVRJoxldF1fuz_PhhwgcityVelAQBBRc6V9l3sZTv-sJD5qGXOdKUsKq97vlMgWy3JAprVz5J65MQGuv7unrav6iw7AI',
-                                            'lapangan futsal' =>
-                                                'https://lh3.googleusercontent.com/aida-public/AB6AXuCuypwVzw_jZ3uJil6R_Yu6JDbPxm5oQQuChKb2MFJMyhYR3ntLzswcPBZIWdHPpLQtrjsIH8WC6YDllHXaj8Nu4iziClPz1zbi1na601oeXtcJMzG7IpYwfkHZlFgatmxjOHOHNhRYaKU3zw00woYWYIvGhBuoSLoGOyw38aqVKbLCZ7YYVRJoxldF1fuz_PhhwgcityVelAQBBRc6V9l3sZTv-sJD5qGXOdKUsKq97vlMgWy3JAprVz5J65MQGuv7unrav6iw7AI',
-                                            'lab komputer' =>
-                                                'https://lh3.googleusercontent.com/aida-public/AB6AXuCYDuyAr4wkLD5RDsdeC8LXx9YMN-2RTE2KHwE8lcnHKvacmNNFuXqFxVd69RhRqGm17CiETHUBzwVf-25iUr3FrourgilXcFqWuRn5Yr9xqYVhp_4ODQ2qWn-Pu8H2S5XFwQdVcoIB7xERMvVjzHRz4Hyq3CKv_0S69i5wxVjLKWLNmG0oEmM--z6GqbmvAbBqxODiG0rrUEciRVu9ItAZEiovR_8olj-4NP8QOAfACz3xqerxL1TeoYoW7qHkdpEuFbWi0kSC8_4',
-                                            'ruang multimedia' =>
-                                                'https://lh3.googleusercontent.com/aida-public/AB6AXuDV44yuVCfqCMCXs5Dnm5XsjF6_HFSAfCsuYj_uRq88uIQpt2Ew7dyJdmIEF8nsCPQoaGuJkzrHiIWmB1EJNOa_47a7PsHy_2nOPAs-jkTFo-xNv8LQsTOD981NN9gbIpWCRHq_RtXdh0M_yEk2KGlU-rnFoEBYkOjOsZgPuWpu88CThjuI2u1SZvX7z2wIWiMQFEcGvx3_SAVy8yD8XcDlmJ_xCW1v8o4_CWq0JfhQ-8ywl1YaHOO5apjRdjf0TkPFnqPIE7Z4ppo',
-                                            'aula utama' =>
-                                                'https://lh3.googleusercontent.com/aida-public/AB6AXuDtKiVt1rOHdByKgAFEuPYl9ZOR3DfFmHpgR5o3igSx67EKu6qAeA0xgMIEu55eArBhBlrMGHVA3ZSnXnJBjxvC8_hQVN4OAiXW5t-U031JZKoTSa-gY5yRGpbG2I9UCvlTytnJHC3Fps4uI8k-Pqd5Ri6n0x-gjFGDc4PXQgvlj-RYW3TOdn1NhkpZsx8IYvB3qKkxZ4aUBEHgb_fK_H_mEhWj-NsmKHYODK1q5ZegGmHobXRbiRQ785KoMI9W8AVRdpiqniAmJnM',
-                                            'aula sekolah' =>
-                                                'https://lh3.googleusercontent.com/aida-public/AB6AXuDtKiVt1rOHdByKgAFEuPYl9ZOR3DfFmHpgR5o3igSx67EKu6qAeA0xgMIEu55eArBhBlrMGHVA3ZSnXnJBjxvC8_hQVN4OAiXW5t-U031JZKoTSa-gY5yRGpbG2I9UCvlTytnJHC3Fps4uI8k-Pqd5Ri6n0x-gjFGDc4PXQgvlj-RYW3TOdn1NhkpZsx8IYvB3qKkxZ4aUBEHgb_fK_H_mEhWj-NsmKHYODK1q5ZegGmHobXRbiRQ785KoMI9W8AVRdpiqniAmJnM',
-                                            'lab bahasa' =>
-                                                'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
-                                        ];
-                                        $namaKey = strtolower($f->nama);
-                                        $imgUrl = $f->foto
-                                            ? Storage::url($f->foto)
-                                            : $imgMap[$namaKey] ??
-                                                'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=800&q=80';
-                                    @endphp
-
-                                    <div class="facility-card relative bg-surface rounded-lg p-sm border
-                {{ $isPreselected ? 'border-primary shadow-[0_0_20px_rgba(133,248,195,0.15)] ring-1 ring-primary' : 'border-outline-variant/30' }}
-                glass-highlight cursor-pointer hover:border-primary/50 transition-all duration-200 group"
-                                        data-id="{{ $f->id }}" data-harga="{{ $f->harga_per_jam }}"
-                                        data-nama="{{ $f->nama }}" onclick="selectFacility(this)">
-
-                                        @if ($isPreselected)
-                                            <div
-                                                class="absolute top-md right-md w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_#85f8c3] z-10 pulse-dot">
+                            {{-- LIST FASILITAS YANG SUDAH DIPILIH --}}
+                            <div id="selectedFacilitiesList" class="mb-4 space-y-2">
+                                @if ($isFacilityLocked && $preselectedFacilityId)
+                                    @php $firstFacility = $fasilitas->firstWhere('id', $preselectedFacilityId); @endphp
+                                    @if ($firstFacility)
+                                        <div class="selected-facility-item flex justify-between items-center bg-primary/5 rounded-xl p-3 border border-primary/20"
+                                            data-id="{{ $firstFacility->id }}">
+                                            <div>
+                                                <span class="font-bold text-on-surface">{{ $firstFacility->nama }}</span>
+                                                <span
+                                                    class="text-xs text-on-surface-variant ml-2">Rp{{ number_format($firstFacility->harga_per_jam, 0, ',', '.') }}/jam</span>
                                             </div>
-                                        @else
-                                            <div
-                                                class="facility-dot absolute top-md right-md w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_#85f8c3] z-10 pulse-dot hidden">
-                                            </div>
-                                        @endif
-
-                                        <div
-                                            class="w-full h-32 rounded-DEFAULT overflow-hidden mb-sm bg-surface-container relative">
-                                            <img src="{{ $imgUrl }}" alt="{{ $f->nama }}"
-                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                loading="lazy"
-                                                onerror="this.src='https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=800&q=80'">
+                                            <button type="button"
+                                                class="remove-facility-btn text-red-400 hover:text-red-300">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
                                         </div>
-
-                                        <h3
-                                            class="font-body-lg text-body-lg {{ $isPreselected ? 'text-primary font-bold' : 'text-on-surface' }} transition-colors">
-                                            {{ $f->nama }}
-                                        </h3>
-                                        <p class="font-body-md text-body-md text-on-surface-variant">
-                                            Rp {{ number_format($f->harga_per_jam, 0, ',', '.') }}/jam
-                                            @if ($f->kapasitas)
-                                                · {{ $f->kapasitas }} orang
-                                            @endif
-                                        </p>
-                                    </div>
-                                @endforeach
+                                    @endif
+                                @endif
                             </div>
 
                             <input type="hidden" name="fasilitas_id" id="fasilitas_id"
                                 value="{{ $preselectedFacilityId ?: old('fasilitas_id') }}">
+
                             @error('fasilitas_id')
                                 <p class="text-error text-sm mt-2">{{ $message }}</p>
                             @enderror
 
+                            {{-- MODAL PILIH FASILITAS --}}
+                            <div id="facilitySelectionModal"
+                                class="fixed inset-0 z-[9999] hidden items-center justify-center p-4"
+                                style="background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);">
+                                <div class="bg-surface rounded-2xl w-full max-w-4xl max-h-[85vh] overflow-y-auto p-6">
+                                    <div class="flex justify-between items-center mb-4 sticky top-0 bg-surface pb-2">
+                                        <h3 class="text-xl font-bold">Tambah Fasilitas</h3>
+                                        <button type="button" id="closeFacilityModal" class="text-primary">
+                                            <span class="material-symbols-outlined">close</span>
+                                        </button>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="facility-grid-modal">
+                                        @foreach ($fasilitas as $f)
+                                            @php $isAlreadySelected = ($preselectedFacilityId == $f->id); @endphp
+                                            @if (!$isAlreadySelected)
+                                                <div class="flex items-center gap-3 p-3 border border-outline-variant/30 rounded-xl hover:border-primary/50 cursor-pointer transition select-facility-item"
+                                                    data-id="{{ $f->id }}" data-nama="{{ $f->nama }}"
+                                                    data-harga="{{ $f->harga_per_jam }}">
+                                                    <img src="{{ $f->foto ? Storage::url($f->foto) : 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=800&q=80' }}"
+                                                        class="w-12 h-12 rounded-lg object-cover">
+                                                    <div>
+                                                        <div class="font-bold">{{ $f->nama }}</div>
+                                                        <div class="text-primary text-sm">
+                                                            Rp{{ number_format($f->harga_per_jam, 0, ',', '.') }}/jam</div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+
                             @if ($isFacilityLocked)
                                 <div class="mt-3 text-sm text-primary bg-primary/10 p-3 rounded-lg">
                                     <span class="material-symbols-outlined text-[18px] align-middle">info</span>
-                                    Fasilitas telah dipilih. Lanjutkan ke pemilihan jadwal.
+                                    Fasilitas utama telah dipilih. Klik (+) untuk menambah fasilitas lain.
                                 </div>
                             @endif
                         </section>
@@ -367,7 +349,7 @@
                             @enderror
                         </section>
 
-                        <!-- ===== STEP 4: Metode Pembayaran (DENGAN SUB PILIHAN BANK & E-WALLET) ===== -->
+                        <!-- ===== STEP 4: Metode Pembayaran ===== -->
                         <section id="metode-bayar-section">
                             <div class="flex items-center gap-sm mb-md">
                                 <div
@@ -376,7 +358,6 @@
                                 <h2 class="font-headline-md text-headline-md text-on-surface">Metode Pembayaran</h2>
                             </div>
 
-                            <!-- Pilihan Utama: Transfer / Cash -->
                             <div class="grid grid-cols-2 gap-md">
                                 <label class="cursor-pointer">
                                     <input type="radio" name="metode_bayar" value="transfer" class="sr-only peer"
@@ -419,13 +400,11 @@
                                 </label>
                             </div>
 
-                            <!-- Sub Pilihan untuk Transfer Bank (Bank & E-Wallet) -->
                             <div id="transfer-detail" class="hidden mt-4">
                                 <div class="bg-surface-container-low rounded-xl p-4">
                                     <div class="text-sm font-bold mb-3 text-on-surface-variant">Pilih Bank / E-Wallet:
                                     </div>
                                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                                        <!-- BRI - Hijau -->
                                         <label class="cursor-pointer text-center">
                                             <input type="radio" name="bank_tujuan" value="bri" class="sr-only peer"
                                                 onchange="updateRekening()">
@@ -437,7 +416,6 @@
                                                 <div class="text-xs mt-2">BRI</div>
                                             </div>
                                         </label>
-                                        <!-- BCA - Biru -->
                                         <label class="cursor-pointer text-center">
                                             <input type="radio" name="bank_tujuan" value="bca" class="sr-only peer"
                                                 onchange="updateRekening()">
@@ -449,7 +427,6 @@
                                                 <div class="text-xs mt-2">BCA</div>
                                             </div>
                                         </label>
-                                        <!-- Mandiri - Orange -->
                                         <label class="cursor-pointer text-center">
                                             <input type="radio" name="bank_tujuan" value="mandiri"
                                                 class="sr-only peer" onchange="updateRekening()">
@@ -461,7 +438,6 @@
                                                 <div class="text-xs mt-2">Mandiri</div>
                                             </div>
                                         </label>
-                                        <!-- Dana - Biru Laut -->
                                         <label class="cursor-pointer text-center">
                                             <input type="radio" name="bank_tujuan" value="dana" class="sr-only peer"
                                                 onchange="updateRekening()">
@@ -473,7 +449,6 @@
                                                 <div class="text-xs mt-2">Dana</div>
                                             </div>
                                         </label>
-                                        <!-- Gopay - Hijau Muda -->
                                         <label class="cursor-pointer text-center">
                                             <input type="radio" name="bank_tujuan" value="gopay" class="sr-only peer"
                                                 onchange="updateRekening()">
@@ -509,27 +484,8 @@
                                 class="font-headline-md text-headline-md text-on-surface mb-md pb-sm border-b border-outline-variant/20">
                                 Ringkasan Booking</h3>
 
-                            <div class="flex flex-col gap-sm mb-lg">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-body-md text-body-md text-on-surface-variant">Fasilitas</span>
-                                    <span class="font-body-md text-body-md text-on-surface font-bold text-right"
-                                        id="sum-fasilitas">—</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="font-body-md text-body-md text-on-surface-variant">Tanggal</span>
-                                    <span class="font-body-md text-body-md text-on-surface font-bold text-right"
-                                        id="sum-tanggal">—</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="font-body-md text-body-md text-on-surface-variant">Waktu</span>
-                                    <span class="font-body-md text-body-md text-on-surface font-bold text-right"
-                                        id="sum-waktu">—</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="font-body-md text-body-md text-on-surface-variant">Durasi</span>
-                                    <span class="font-body-md text-body-md text-on-surface font-bold text-right"
-                                        id="sum-durasi">—</span>
-                                </div>
+                            <div class="flex flex-col gap-sm mb-lg" id="summary-facilities-list">
+                                <!-- Akan diisi JavaScript -->
                             </div>
 
                             <div class="bg-surface-container-low rounded-lg p-sm mb-lg border border-outline-variant/10">
@@ -598,13 +554,13 @@
             @endforeach
         </div>
     @endif
-    <!-- ==================== MODAL POPUP PEMBAYARAN (LAYOUT 2 KOLOM) ==================== -->
+
+    <!-- ==================== MODAL POPUP PEMBAYARAN ==================== -->
     <div id="payment-modal"
         class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-center justify-center hidden"
         style="backdrop-filter: blur(4px);">
         <div class="bg-surface rounded-2xl w-full max-w-3xl mx-4 shadow-2xl border border-primary/30 animate-fadeInUp">
 
-            <!-- Header Modal -->
             <div class="p-5 border-b border-outline-variant/30 flex justify-between items-center">
                 <h3 class="text-xl font-bold text-on-surface">Detail Pembayaran</h3>
                 <button onclick="closePaymentModal()" class="text-on-surface-variant hover:text-primary">
@@ -617,13 +573,10 @@
                 <input type="hidden" name="jenis_pembayaran" id="jenis_pembayaran" value="full">
                 <input type="hidden" name="bank_tujuan_final" id="bank_tujuan_final">
 
-                <!-- 2 KOLOM: Kiri = Pilihan & Rekening, Kanan = Upload Bukti -->
                 <div class="p-5">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                        <!-- KOLOM KIRI -->
                         <div class="space-y-4">
-                            <!-- Pilihan DP atau Lunas -->
                             <div>
                                 <label class="text-sm text-on-surface-variant block mb-2">Pilih Jenis Pembayaran</label>
                                 <div class="grid grid-cols-2 gap-2">
@@ -640,7 +593,6 @@
                                 </div>
                             </div>
 
-                            <!-- Informasi Rekening Tujuan (dengan padding lebih besar) -->
                             <div class="bg-surface-container-low rounded-xl p-6 border border-primary/20">
                                 <div class="flex items-center gap-3 mb-3">
                                     <span class="material-symbols-outlined text-primary">account_balance</span>
@@ -652,9 +604,7 @@
                             </div>
                         </div>
 
-                        <!-- KOLOM KANAN -->
                         <div class="space-y-4">
-                            <!-- Upload Bukti Transfer -->
                             <div>
                                 <label class="text-sm text-on-surface-variant block mb-2">Upload Bukti Transfer</label>
                                 <div class="border-2 border-dashed border-outline-variant/50 rounded-xl p-4 text-center cursor-pointer hover:border-primary transition-all"
@@ -674,7 +624,6 @@
                     </div>
                 </div>
 
-                <!-- Footer Modal -->
                 <div class="p-5 border-t border-outline-variant/30 flex gap-3">
                     <button type="button" onclick="closePaymentModal()"
                         class="flex-1 py-3 rounded-xl border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container transition-all">
@@ -758,12 +707,50 @@
             }
         };
 
+        // USER ROLE - Deklarasi PERTAMA dan SATU-SATUNYA
+        const USER_ROLE = '{{ Auth::user()->role }}';
+        const IS_GURU = (USER_ROLE === 'guru');
+        const IS_SISWA_INTERNAL = (USER_ROLE === 'siswa_internal');
+
         let totalHargaFinal = 0;
         let selectedBank = null;
         let selectedJenis = 'full';
         let currentFormData = null;
 
-        // Fungsi toggle metode detail (bank/e-wallet)
+        // MULTIPLE FACILITY STATE
+        let selectedFacilities = [];
+        let selFasilitas = null;
+        let selJam = null;
+        let bookedSlots = [];
+
+        // Helper functions
+        function fmt(n) {
+            return 'Rp ' + Number(n).toLocaleString('id-ID');
+        }
+
+        function showToast(msg, icon = 'check_circle') {
+            const t = document.getElementById('toast');
+            if (!t) return;
+            document.getElementById('toast-msg').textContent = msg;
+            document.getElementById('toast-icon').textContent = icon;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // Fungsi get diskon (diperbaiki)
+        function getDiskon(tanggal, jam) {
+            if (!IS_SISWA_INTERNAL) return 0;
+            if (!tanggal || !jam) return 0;
+            const d = new Date(tanggal);
+            const h = parseInt(jam.split(':')[0]);
+            // Senin–Jumat (1-5), jam 08-14
+            if (d.getDay() >= 1 && d.getDay() <= 5 && h >= 8 && h < 15) {
+                return 20;
+            }
+            return 0;
+        }
+
+        // Toggle metode detail
         function toggleMetodeDetail() {
             const metode = document.querySelector('input[name="metode_bayar"]:checked')?.value;
             const transferDetail = document.getElementById('transfer-detail');
@@ -774,30 +761,26 @@
             }
         }
 
-        // Update rekening info
         function updateRekening() {
             selectedBank = document.querySelector('input[name="bank_tujuan"]:checked')?.value;
             const rekInfo = document.getElementById('rekening-info');
             if (selectedBank && rekeningData[selectedBank]) {
                 const r = rekeningData[selectedBank];
                 rekInfo.innerHTML = `
-                    <p class="text-on-surface font-medium">${r.icon} ${r.nama}</p>
-                    <p class="text-primary font-mono text-lg">${r.nomor}</p>
-                    <p class="text-xs text-on-surface-variant">a.n. ${r.atas_nama}</p>
-                `;
+                <p class="text-on-surface font-medium">${r.icon} ${r.nama}</p>
+                <p class="text-primary font-mono text-lg">${r.nomor}</p>
+                <p class="text-xs text-on-surface-variant">a.n. ${r.atas_nama}</p>
+            `;
             } else {
                 rekInfo.innerHTML = '<p class="text-on-surface-variant">Pilih bank/e-wallet terlebih dahulu</p>';
             }
         }
 
-        // Pilih jenis pembayaran (full/dp)
         function pilihJenis(jenis) {
             selectedJenis = jenis;
             document.getElementById('jenis_pembayaran').value = jenis;
-
             const btnFull = document.getElementById('btn-full');
             const btnDp = document.getElementById('btn-dp');
-
             if (jenis === 'full') {
                 btnFull.classList.add('border-primary', 'bg-primary/10');
                 btnFull.classList.remove('border-outline-variant/30');
@@ -811,7 +794,6 @@
             }
         }
 
-        // Preview bukti
         function previewBukti(input) {
             const preview = document.getElementById('bukti-preview');
             const img = document.getElementById('bukti-img');
@@ -825,85 +807,140 @@
             }
         }
 
-        // Close modal
         function closePaymentModal() {
             document.getElementById('payment-modal').classList.add('hidden');
         }
 
-        // Show modal
         function showPaymentModal() {
-            // Set nominal
             document.getElementById('full-nominal').innerHTML = fmt(totalHargaFinal);
             document.getElementById('dp-nominal').innerHTML = fmt(totalHargaFinal / 2);
-
-            // Reset form
             selectedJenis = 'full';
             pilihJenis('full');
-
             document.getElementById('payment-modal').classList.remove('hidden');
         }
 
-        function fmt(n) {
-            return 'Rp ' + Number(n).toLocaleString('id-ID');
-        }
+        // Multi-facility functions
+        function updateSelectedFacilitiesUI() {
+            const container = document.getElementById('selectedFacilitiesList');
+            const hiddenInput = document.getElementById('fasilitas_id');
+            if (!container) return;
 
-        // ─── State ───
-        let selFasilitas = null; // { id, harga, nama }
-        let selJam = null; // '08:00'
-        let bookedSlots = [];
+            if (selectedFacilities.length === 0) {
+                container.innerHTML =
+                    '<div class="text-center text-on-surface-variant text-sm py-4">Belum ada fasilitas dipilih</div>';
+                if (hiddenInput) hiddenInput.value = '';
+                return;
+            }
 
-        // ─── Toast ───
-        function showToast(msg, icon = 'check_circle') {
-            const t = document.getElementById('toast');
-            if (!t) return;
-            document.getElementById('toast-msg').textContent = msg;
-            document.getElementById('toast-icon').textContent = icon;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
+            let html = '';
+            selectedFacilities.forEach(f => {
+                html += `
+                <div class="selected-facility-item flex justify-between items-center bg-primary/5 rounded-xl p-3 border border-primary/20" data-id="${f.id}">
+                    <div>
+                        <span class="font-bold text-on-surface">${f.nama}</span>
+                        <span class="text-xs text-on-surface-variant ml-2">Rp${f.harga.toLocaleString('id-ID')}/jam</span>
+                    </div>
+                    <button type="button" class="remove-facility-btn text-red-400 hover:text-red-300">
+                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                </div>
+            `;
+            });
+            container.innerHTML = html;
 
-        // ─── Select Fasilitas ───
-        function selectFacility(el) {
-            // Reset semua card
-            document.querySelectorAll('.facility-card').forEach(c => {
-                c.classList.remove('border-primary', 'shadow-[0_0_20px_rgba(133,248,195,0.15)]', 'ring-1',
-                    'ring-primary');
-                c.classList.add('border-outline-variant/30');
-                const h3 = c.querySelector('h3');
-                if (h3) {
-                    h3.classList.remove('text-primary', 'font-bold');
-                    h3.classList.add('text-on-surface');
-                }
-                const dot = c.querySelector('.facility-dot');
-                if (dot) dot.classList.add('hidden');
+            const ids = selectedFacilities.map(f => f.id);
+            hiddenInput.value = ids.join(',');
+
+            document.querySelectorAll('.remove-facility-btn').forEach(btn => {
+                btn.removeEventListener('click', handleRemoveFacility);
+                btn.addEventListener('click', handleRemoveFacility);
             });
 
-            // Aktifkan card yang dipilih
-            el.classList.add('border-primary', 'shadow-[0_0_20px_rgba(133,248,195,0.15)]', 'ring-1', 'ring-primary');
-            el.classList.remove('border-outline-variant/30');
-            const h3 = el.querySelector('h3');
-            if (h3) {
-                h3.classList.add('text-primary', 'font-bold');
-                h3.classList.remove('text-on-surface');
+            if (selectedFacilities.length > 0) {
+                const firstFac = selectedFacilities[0];
+                selFasilitas = {
+                    id: firstFac.id,
+                    harga: firstFac.harga,
+                    nama: firstFac.nama
+                };
+                loadSlots();
+                updateSummary();
+            } else {
+                selFasilitas = null;
+                document.getElementById('jam_mulai').value = '';
+                updateSummary();
             }
-            const dot = el.querySelector('.facility-dot');
-            if (dot) dot.classList.remove('hidden');
-
-            selFasilitas = {
-                id: el.dataset.id,
-                harga: parseFloat(el.dataset.harga),
-                nama: el.dataset.nama,
-            };
-            document.getElementById('fasilitas_id').value = selFasilitas.id;
-
-            // Reset slot & update summary
-            selJam = null;
-            document.getElementById('jam_mulai').value = '';
-            loadSlots();
-            updateSummary();
         }
 
-        // ─── Load Slots via AJAX ───
+        function handleRemoveFacility(event) {
+            const item = event.target.closest('.selected-facility-item');
+            if (item) {
+                const id = parseInt(item.dataset.id);
+                selectedFacilities = selectedFacilities.filter(f => f.id !== id);
+                updateSelectedFacilitiesUI();
+            }
+        }
+
+        // Modal facility selection
+        const btnAddMore = document.getElementById('btnAddMoreFacility');
+        const modal = document.getElementById('facilitySelectionModal');
+        const closeModalBtn = document.getElementById('closeFacilityModal');
+
+        if (btnAddMore) {
+            btnAddMore.addEventListener('click', () => {
+                const selectedIds = selectedFacilities.map(f => f.id);
+                const modalGrid = document.getElementById('facility-grid-modal');
+                if (modalGrid) {
+                    const items = modalGrid.querySelectorAll('.select-facility-item');
+                    items.forEach(el => {
+                        const id = parseInt(el.dataset.id);
+                        if (selectedIds.includes(id)) {
+                            el.style.display = 'none';
+                        } else {
+                            el.style.display = 'flex';
+                        }
+                    });
+                }
+                modal.classList.remove('hidden');
+            });
+        }
+
+        if (closeModalBtn) closeModalBtn.onclick = () => modal.classList.add('hidden');
+        if (modal) modal.onclick = (e) => {
+            if (e.target === modal) modal.classList.add('hidden');
+        };
+
+        document.querySelectorAll('.select-facility-item').forEach(el => {
+            el.onclick = () => {
+                const id = parseInt(el.dataset.id);
+                const nama = el.dataset.nama;
+                const harga = parseFloat(el.dataset.harga);
+                if (!selectedFacilities.some(f => f.id === id)) {
+                    selectedFacilities.push({
+                        id,
+                        nama,
+                        harga
+                    });
+                    updateSelectedFacilitiesUI();
+                }
+                modal.classList.add('hidden');
+            };
+        });
+
+        // Initialize preselected facility
+        const preSelectedId = '{{ $preselectedFacilityId ?: old('fasilitas_id', request('fasilitas_id')) }}';
+        if (preSelectedId) {
+            const initialNama = "{{ $fasilitas->firstWhere('id', $preselectedFacilityId)?->nama ?? '' }}";
+            const initialHarga = {{ $fasilitas->firstWhere('id', $preselectedFacilityId)?->harga_per_jam ?? 0 }};
+            selectedFacilities = [{
+                id: parseInt(preSelectedId),
+                nama: initialNama,
+                harga: initialHarga
+            }];
+            updateSelectedFacilitiesUI();
+        }
+
+        // Load slots
         async function loadSlots() {
             if (!selFasilitas) {
                 setSlotState('info');
@@ -918,27 +955,18 @@
             setSlotState('loading');
             try {
                 const url = `/user/fasilitas/${selFasilitas.id}/slots?tanggal=${tanggal}`;
-                console.log('Fetching slots from:', url);
-
                 const res = await fetch(url, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'Accept': 'application/json'
                     }
                 });
-
-                if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}`);
-                }
-
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                console.log('Slots data:', data);
-
                 if (data.libur) {
                     setSlotState('libur');
                     return;
                 }
-
                 if (data.slots && data.slots.length > 0) {
                     bookedSlots = data.slots.filter(s => !s.available).map(s => s.jam);
                     renderSlots(data.slots);
@@ -964,7 +992,6 @@
             slots.forEach(slot => {
                 const div = document.createElement('div');
                 div.dataset.jam = slot.jam;
-
                 if (!slot.available) {
                     div.className =
                         'slot-taken py-sm text-center rounded-DEFAULT relative overflow-hidden opacity-50 line-through cursor-not-allowed';
@@ -972,7 +999,6 @@
                 } else {
                     const isSelected = selJam === slot.jam;
                     const isDuration = isDurationSlot(slot.jam, selJam, durasi, slots);
-
                     if (isSelected) {
                         div.className =
                             'slot-selected py-sm text-center rounded-DEFAULT cursor-pointer relative overflow-hidden group bg-primary text-on-primary font-bold';
@@ -987,7 +1013,6 @@
                             'py-sm text-center rounded-DEFAULT border border-outline-variant/30 text-on-surface-variant cursor-pointer hover:border-primary/50 hover:text-primary transition-colors';
                         div.textContent = slot.jam;
                     }
-
                     div.addEventListener('click', () => {
                         selJam = slot.jam;
                         document.getElementById('jam_mulai').value = slot.jam;
@@ -1012,80 +1037,50 @@
             const loading = document.getElementById('slot-loading');
             const libur = document.getElementById('slot-libur');
             const grid = document.getElementById('slot-grid');
-
             if (info) info.classList.toggle('hidden', state !== 'info');
             if (loading) loading.classList.toggle('hidden', state !== 'loading');
             if (libur) libur.classList.toggle('hidden', state !== 'libur');
             if (grid) grid.classList.toggle('hidden', state !== 'grid');
         }
 
-        // ─── Update Summary Panel ───
+        // Update summary
         function updateSummary() {
             const tanggal = document.getElementById('booking-date').value;
             const durasi = parseInt(document.getElementById('durasi-input').value) || 1;
+            const summaryContainer = document.getElementById('summary-facilities-list');
 
-            // Fasilitas
-            const sumFasilitas = document.getElementById('sum-fasilitas');
-            if (sumFasilitas) sumFasilitas.textContent = selFasilitas ? selFasilitas.nama : '—';
+            if (selectedFacilities.length > 0) {
+                let facilitiesHtml = '';
+                let subtotal = 0;
+                selectedFacilities.forEach(f => {
+                    const itemTotal = f.harga * durasi;
+                    subtotal += itemTotal;
+                    facilitiesHtml += `
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-on-surface-variant">${f.nama} (${durasi} jam)</span>
+                        <span class="text-on-surface font-bold">${fmt(itemTotal)}</span>
+                    </div>
+                `;
+                });
+                summaryContainer.innerHTML = facilitiesHtml;
 
-            // Tanggal formatted
-            if (tanggal && document.getElementById('sum-tanggal')) {
-                const d = new Date(tanggal);
-                const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
-                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-                document.getElementById('sum-tanggal').textContent =
-                    `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-            } else if (document.getElementById('sum-tanggal')) {
-                document.getElementById('sum-tanggal').textContent = '—';
-            }
-
-            // Waktu
-            if (selJam && document.getElementById('sum-waktu')) {
-                const [h, m] = selJam.split(':').map(Number);
-                const endH = h + durasi;
-                document.getElementById('sum-waktu').textContent =
-                    `${selJam} – ${String(endH).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-            } else if (document.getElementById('sum-waktu')) {
-                document.getElementById('sum-waktu').textContent = '—';
-            }
-
-            // Durasi
-            const sumDurasi = document.getElementById('sum-durasi');
-            if (sumDurasi) sumDurasi.textContent = `${durasi} Jam`;
-
-            // Harga
-            if (selFasilitas) {
-                let subtotal = selFasilitas.harga * durasi;
-                let diskon = 0;
                 let total = subtotal;
-
-                if (USER_ROLE === 'guru') {
-                    // Guru gratis 100%
-                    diskon = 100;
+                if (IS_GURU) {
                     total = 0;
-
-                    const sumSubtotal = document.getElementById('sum-subtotal');
-                    const sumTotal = document.getElementById('sum-total');
-                    if (sumSubtotal) sumSubtotal.textContent = fmt(subtotal);
-                    if (sumTotal) sumTotal.textContent = fmt(0);
-
+                    document.getElementById('sum-subtotal').innerHTML = fmt(subtotal);
+                    document.getElementById('sum-total').innerHTML = fmt(0);
                     const diskonRow = document.getElementById('diskon-row');
                     if (diskonRow) {
                         diskonRow.style.removeProperty('display');
-                        document.getElementById('diskon-label').textContent = `Diskon Guru (100%)`;
+                        document.getElementById('diskon-label').textContent = 'Diskon Guru (100%)';
                         document.getElementById('sum-diskon').textContent = `- ${fmt(subtotal)}`;
                     }
                 } else {
-                    // Siswa internal atau lainnya
-                    diskon = getDiskon(tanggal, selJam || '');
+                    const diskon = getDiskon(tanggal, selJam || '');
                     const totalDiskon = subtotal * (diskon / 100);
                     total = subtotal - totalDiskon;
-
-                    const sumSubtotal = document.getElementById('sum-subtotal');
-                    const sumTotal = document.getElementById('sum-total');
-                    if (sumSubtotal) sumSubtotal.textContent = fmt(subtotal);
-                    if (sumTotal) sumTotal.textContent = fmt(total);
-
+                    document.getElementById('sum-subtotal').innerHTML = fmt(subtotal);
+                    document.getElementById('sum-total').innerHTML = fmt(total);
                     const diskonRow = document.getElementById('diskon-row');
                     if (diskonRow) {
                         if (diskon > 0) {
@@ -1099,56 +1094,55 @@
                 }
                 totalHargaFinal = total;
             } else {
-                const sumSubtotal = document.getElementById('sum-subtotal');
-                const sumTotal = document.getElementById('sum-total');
-                if (sumSubtotal) sumSubtotal.textContent = 'Rp 0';
-                if (sumTotal) sumTotal.textContent = 'Rp 0';
+                summaryContainer.innerHTML =
+                    '<div class="text-center text-on-surface-variant text-sm py-2">Belum ada fasilitas</div>';
+                document.getElementById('sum-subtotal').innerHTML = 'Rp 0';
+                document.getElementById('sum-total').innerHTML = 'Rp 0';
+                totalHargaFinal = 0;
             }
+
+            // Update tanggal, waktu, durasi
+            if (tanggal && document.getElementById('sum-tanggal')) {
+                const d = new Date(tanggal);
+                const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                document.getElementById('sum-tanggal').textContent =
+                    `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+            }
+            if (selJam && document.getElementById('sum-waktu')) {
+                const [h, m] = selJam.split(':').map(Number);
+                const endH = h + durasi;
+                document.getElementById('sum-waktu').textContent =
+                    `${selJam} – ${String(endH).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+            }
+            document.getElementById('sum-durasi').textContent = `${durasi} Jam`;
         }
 
-        function getDiskon(tanggal, jam) {
-            const DISKON_PERSEN = (USER_ROLE === 'siswa_internal') ? 20 : 0;
-            if (DISKON_PERSEN <= 0 || !tanggal || !jam) return 0;
-            const d = new Date(tanggal);
-            const h = parseInt(jam.split(':')[0]);
-            return (d.getDay() >= 1 && d.getDay() <= 5 && h >= 8 && h < 15) ? DISKON_PERSEN : 0;
-        }
-
-        // ─── Durasi Buttons ───
+        // Durasi buttons
         const durMinus = document.getElementById('dur-minus');
         const durPlus = document.getElementById('dur-plus');
         const durasiInput = document.getElementById('durasi-input');
 
-        if (durMinus) {
-            durMinus.addEventListener('click', () => {
-                if (parseInt(durasiInput.value) > 1) {
-                    durasiInput.value = parseInt(durasiInput.value) - 1;
-                    onDurasiChange();
-                }
-            });
-        }
-
-        if (durPlus) {
-            durPlus.addEventListener('click', () => {
-                if (parseInt(durasiInput.value) < 8) {
-                    durasiInput.value = parseInt(durasiInput.value) + 1;
-                    onDurasiChange();
-                }
-            });
-        }
-
-        if (durasiInput) {
-            durasiInput.addEventListener('change', onDurasiChange);
-        }
-
         function onDurasiChange() {
-            if (selJam) {
-                loadSlots();
-            }
+            if (selJam) loadSlots();
             updateSummary();
         }
 
-        // ─── Tanggal berubah ───
+        if (durMinus) durMinus.addEventListener('click', () => {
+            if (parseInt(durasiInput.value) > 1) {
+                durasiInput.value = parseInt(durasiInput.value) - 1;
+                onDurasiChange();
+            }
+        });
+        if (durPlus) durPlus.addEventListener('click', () => {
+            if (parseInt(durasiInput.value) < 8) {
+                durasiInput.value = parseInt(durasiInput.value) + 1;
+                onDurasiChange();
+            }
+        });
+        if (durasiInput) durasiInput.addEventListener('change', onDurasiChange);
+
+        // Date change
         const bookingDate = document.getElementById('booking-date');
         if (bookingDate) {
             bookingDate.addEventListener('change', () => {
@@ -1159,58 +1153,40 @@
             });
         }
 
-        // ─── Sembunyikan metode pembayaran jika GURU ───
-        const USER_ROLE = '{{ Auth::user()->role }}';
-        const IS_GURU = (USER_ROLE === 'guru');
-
+        // Hide payment methods for GURU
         if (IS_GURU) {
             const metodeSection = document.querySelector('#metode-bayar-section');
-            if (metodeSection) {
-                metodeSection.style.display = 'none';
-            }
-            // Guru otomatis pake cash
+            if (metodeSection) metodeSection.style.display = 'none';
             const cashRadio = document.querySelector('input[name="metode_bayar"][value="cash"]');
             if (cashRadio) cashRadio.checked = true;
         }
 
-        // ─── Submit Button Handler ───
+        // Submit button
         const bookingForm = document.getElementById('booking-form');
         const submitBtn = document.getElementById('submit-btn');
 
         if (submitBtn) {
             submitBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-
-                // Validasi dasar
-                if (!selFasilitas) {
-                    showToast('Pilih fasilitas terlebih dahulu.', 'error');
+                if (selectedFacilities.length === 0) {
+                    showToast('Pilih minimal satu fasilitas.', 'error');
                     return;
                 }
                 if (!selJam) {
                     showToast('Pilih jam mulai terlebih dahulu.', 'error');
                     return;
                 }
-
                 const metode = document.querySelector('input[name="metode_bayar"]:checked')?.value;
                 if (!metode) {
                     showToast('Pilih metode pembayaran', 'error');
                     return;
                 }
-
-                // Jika CASH: langsung submit, tanpa popup
                 if (metode === 'cash') {
-                    // Disable button
                     submitBtn.disabled = true;
                     submitBtn.innerHTML =
                         '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span> Memproses...';
-
-                    // Tutup modal jika terbuka
                     closePaymentModal();
-
-                    // Buat FormData
                     const formData = new FormData(bookingForm);
-
-                    // Submit dengan fetch
                     fetch(bookingForm.action, {
                         method: 'POST',
                         body: formData,
@@ -1218,9 +1194,8 @@
                             'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                         }
                     }).then(response => response.json()).then(data => {
-                        if (data.success && data.redirect) {
-                            window.location.href = data.redirect;
-                        } else if (data.error) {
+                        if (data.success && data.redirect) window.location.href = data.redirect;
+                        else if (data.error) {
                             showToast(data.error, 'error');
                             submitBtn.disabled = false;
                             submitBtn.innerHTML =
@@ -1235,8 +1210,6 @@
                     });
                     return;
                 }
-
-                // Jika TRANSFER: validasi bank dulu, lalu tampilkan popup
                 if (metode === 'transfer') {
                     const bank = document.querySelector('input[name="bank_tujuan"]:checked')?.value;
                     if (!bank) {
@@ -1244,133 +1217,78 @@
                         return;
                     }
                     document.getElementById('bank_tujuan_final').value = bank;
-
-                    // Simpan data form ke FormData
                     currentFormData = new FormData(bookingForm);
-
-                    // Tampilkan modal
                     showPaymentModal();
                     return;
                 }
             });
         }
 
-        // ─── Payment Form Submit (FIX VALIDASI & ERROR DETECT) ───
+        // Payment form submit
         const paymentForm = document.getElementById('payment-form');
         if (paymentForm) {
             paymentForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-
                 const jenis = document.getElementById('jenis_pembayaran').value;
                 const buktiFile = document.getElementById('bukti_file').files[0];
-                const bookingForm = document.getElementById('booking-form');
-
                 if (!buktiFile) {
                     showToast('Upload bukti pembayaran wajib diisi', 'error');
                     return;
                 }
-
                 const formData = new FormData();
-
-                // Ambil semua data dari bookingForm dasar
                 if (bookingForm) {
                     const bookingFormData = new FormData(bookingForm);
-                    for (let [key, value] of bookingFormData.entries()) {
-                        formData.append(key, value);
-                    }
+                    for (let [key, value] of bookingFormData.entries()) formData.append(key, value);
                 }
-
-                // Tambah/Override data pembayaran dari Modal ke FormData
                 formData.set('jenis_pembayaran', jenis);
                 formData.set('bank_tujuan_final', document.getElementById('bank_tujuan_final').value);
                 formData.set('bukti_pembayaran', buktiFile);
                 formData.set('metode_bayar', 'transfer');
-
-                const submitBtn = document.querySelector('#payment-form button[type="submit"]');
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = 'Memproses...';
-
+                const submitBtnPayment = document.querySelector('#payment-form button[type="submit"]');
+                submitBtnPayment.disabled = true;
+                submitBtnPayment.innerHTML = 'Memproses...';
                 closePaymentModal();
-
                 fetch("{{ route('user.booking.store') }}", {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                            'Accept': 'application/json' // Memaksa Laravel merespon JSON jika validasi gagal
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                        'Accept': 'application/json'
+                    }
+                }).then(async response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        return;
+                    }
+                    const data = await response.json();
+                    if (!response.ok) throw data;
+                    return data;
+                }).then(data => {
+                    if (data && data.success) {
+                        showToast(data.message, 'success');
+                        if (data.redirect) window.location.href = data.redirect;
+                    }
+                }).catch(error => {
+                    console.error('Detail Error Server:', error);
+                    if (error.errors) {
+                        let errorMessages = [];
+                        for (const [field, messages] of Object.entries(error.errors)) {
+                            errorMessages.push(`${messages.join(', ')}`);
                         }
-                    })
-                    .then(async response => {
-                        if (response.redirected) {
-                            window.location.href = response.url;
-                            return;
-                        }
-
-                        const data = await response.json();
-
-                        if (!response.ok) {
-                            // Jika status code 422 (Validasi gagal) atau 500 (Server Error)
-                            throw data;
-                        }
-                        return data;
-                    })
-                    .then(data => {
-                        if (data && data.success) {
-                            showToast(data.message, 'success');
-                            if (data.redirect) {
-                                window.location.href = data.redirect;
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Detail Error Server:', error);
-
-                        // 1. Cek jika ada error validasi Laravel (Status 422)
-                        if (error.errors) {
-                            let errorMessages = [];
-                            for (const [field, messages] of Object.entries(error.errors)) {
-                                errorMessages.push(`${messages.join(', ')}`);
-                            }
-                            showToast(errorMessages.join(' | '), 'error');
-                        }
-                        // 2. Cek jika ada error custom dari try-catch Controller (Status 500)
-                        else if (error.error) {
-                            showToast(error.error, 'error');
-                        }
-                        // 3. Fallback error umum
-                        else {
-                            showToast('Terjadi kesalahan data, periksa console browser', 'error');
-                        }
-                    })
-                    .finally(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = 'Konfirmasi Booking';
-                    });
+                        showToast(errorMessages.join(' | '), 'error');
+                    } else if (error.error) {
+                        showToast(error.error, 'error');
+                    } else {
+                        showToast('Terjadi kesalahan data, periksa console browser', 'error');
+                    }
+                }).finally(() => {
+                    submitBtnPayment.disabled = false;
+                    submitBtnPayment.innerHTML = 'Konfirmasi Booking';
+                });
             });
         }
 
-        // ─── Init: pre-selected fasilitas dari query param ───
-        const preSelectedId = '{{ $preselectedFacilityId ?: old('fasilitas_id', request('fasilitas_id')) }}';
-        const isLocked = {{ $isFacilityLocked ? 'true' : 'false' }};
-
-        if (preSelectedId) {
-            const preSelected = document.querySelector(`.facility-card[data-id="${preSelectedId}"]`);
-            if (preSelected) {
-                selectFacility(preSelected);
-            }
-        }
-
-        // Jika fasilitas locked, disable semua card lain
-        if (isLocked) {
-            document.querySelectorAll('.facility-card').forEach(card => {
-                if (card.dataset.id !== preSelectedId) {
-                    card.style.pointerEvents = 'none';
-                    card.style.opacity = '0.5';
-                }
-            });
-        }
-
-        // Init summary dan skeleton loader
+        // Initialize
         updateSummary();
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -1382,7 +1300,6 @@
             }, 800);
         });
 
-        // Init metode detail jika transfer terpilih
         if (document.querySelector('input[name="metode_bayar"]:checked')?.value === 'transfer') {
             document.getElementById('transfer-detail')?.classList.remove('hidden');
         }
@@ -1391,3 +1308,4 @@
     </body>
 
     </html>
+

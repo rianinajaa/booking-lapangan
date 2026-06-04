@@ -36,11 +36,25 @@
             --topbar-h: 64px;
         }
 
+        /* LIGHT MODE VARIABLES */
+        body.light-mode {
+            --bg: #f1f5f9;
+            --sidebar: #ffffff;
+            --card: #ffffff;
+            --card2: #f8fafc;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-2: #475569;
+            --text-3: #94a3b8;
+            --green-dim: rgba(0, 217, 139, 0.15);
+        }
+
         html,
         body {
             height: 100%;
             background: var(--bg);
             color: var(--text);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* ── SIDEBAR ── */
@@ -55,7 +69,7 @@
             display: flex;
             flex-direction: column;
             z-index: 50;
-            transition: transform 0.3s;
+            transition: transform 0.3s, background 0.3s ease, border-color 0.3s ease;
         }
 
         .sidebar-logo {
@@ -110,8 +124,8 @@
         }
 
         .nav-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--text);
+            background: var(--green-dim);
+            color: var(--green);
         }
 
         .nav-item.active {
@@ -146,6 +160,7 @@
             padding: 0 24px;
             gap: 14px;
             z-index: 40;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .search-box {
@@ -154,10 +169,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.06);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 8px 14px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.light-mode .search-box {
+            background: #f1f5f9;
         }
 
         .search-box input {
@@ -185,7 +205,7 @@
             width: 36px;
             height: 36px;
             border-radius: 9px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.06);
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -197,9 +217,13 @@
             position: relative;
         }
 
+        body.light-mode .icon-btn {
+            background: #f1f5f9;
+        }
+
         .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.10);
-            color: var(--text);
+            background: var(--green-dim);
+            color: var(--green);
         }
 
         .icon-btn .dot {
@@ -239,6 +263,7 @@
             margin-top: var(--topbar-h);
             padding: 28px;
             min-height: calc(100vh - var(--topbar-h));
+            transition: background 0.3s ease;
         }
 
         /* ── CARD ── */
@@ -246,6 +271,7 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 14px;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .card-header {
@@ -272,6 +298,7 @@
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 20px;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .stat-label {
@@ -340,7 +367,11 @@
             padding: 13px 16px;
             font-size: 13px;
             color: var(--text-2);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        body.light-mode td {
+            border-bottom-color: #f1f5f9;
         }
 
         tr:last-child td {
@@ -348,7 +379,7 @@
         }
 
         tr:hover td {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(0, 217, 139, 0.05);
         }
 
         /* ── BADGE ── */
@@ -383,8 +414,12 @@
         }
 
         .badge-gray {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.08);
             color: var(--text-2);
+        }
+
+        body.light-mode .badge-gray {
+            background: #f1f5f9;
         }
 
         /* ── BTN ── */
@@ -412,14 +447,18 @@
         }
 
         .btn-outline {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.06);
             border: 1px solid var(--border);
             color: var(--text-2);
         }
 
+        body.light-mode .btn-outline {
+            background: #f1f5f9;
+        }
+
         .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.10);
-            color: var(--text);
+            background: var(--green-dim);
+            color: var(--green);
         }
 
         .btn-sm {
@@ -500,7 +539,7 @@
         .form-control {
             width: 100%;
             padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.06);
             border: 1.5px solid var(--border);
             border-radius: 9px;
             font-size: 13.5px;
@@ -508,6 +547,10 @@
             outline: none;
             transition: border-color 0.18s, box-shadow 0.18s;
             font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body.light-mode .form-control {
+            background: #ffffff;
         }
 
         .form-control:focus {
@@ -533,9 +576,13 @@
         /* Progress bar */
         .progress {
             height: 4px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.08);
             border-radius: 99px;
             overflow: hidden;
+        }
+
+        body.light-mode .progress {
+            background: #e2e8f0;
         }
 
         .progress-bar {
@@ -543,6 +590,43 @@
             background: var(--green);
             border-radius: 99px;
             transition: width 0.5s;
+        }
+
+        /* Dropdown menu light mode */
+        body.light-mode .absolute.bg-\[\#20232b\] {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        body.light-mode .border-\[\rgba\(255,255,255,0\.07\)\] {
+            border-color: #e2e8f0 !important;
+        }
+
+        body.light-mode .bg-\[\rgba\(255,255,255,0\.02\)\] {
+            background: #f8fafc !important;
+        }
+
+        body.light-mode .text-white {
+            color: #1e293b !important;
+        }
+
+        body.light-mode .hover\:bg-\[\rgba\(255,255,255,0\.05\)\]:hover {
+            background: #f1f5f9 !important;
+        }
+
+        /* Search dropdown light mode */
+        body.light-mode #searchDropdown {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        body.light-mode #searchDropdown a div div[style*="color: #f1f5f9"] {
+            color: #1e293b !important;
+        }
+
+        body.light-mode #searchResults a:hover {
+            background: #f1f5f9 !important;
         }
 
         /* Mobile */
@@ -587,8 +671,12 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.10);
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 99px;
+        }
+
+        body.light-mode ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
         }
     </style>
     @stack('styles')
@@ -675,7 +763,7 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="nav-item"
-                    style="width:100%; border:none; background:none; color:var(--text-2); cursor:pointer;">
+                    style="width:100%; border:none; background:none; cursor:pointer;">
                     <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
                     Logout
                 </button>
@@ -701,27 +789,25 @@
         <div class="search-box" style="position:relative;" id="searchWrapper">
             <i class="fa-solid fa-search" style="color:var(--text-3); font-size:13px;"></i>
             <input type="text" id="globalSearch" placeholder="Cari Data..." autocomplete="off" style="width:100%;">
-            {{-- Spinner --}}
             <i class="fa-solid fa-spinner fa-spin" id="searchSpinner"
                 style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--text-3); font-size:12px;"></i>
 
-            {{-- Dropdown hasil --}}
             <div id="searchDropdown"
                 style="
-        display:none;
-        position:absolute;
-        top:calc(100% + 8px);
-        left:0;
-        width:100%;
-        min-width:360px;
-        background:#141c2b;
-        border:1px solid rgba(255,255,255,0.08);
-        border-radius:16px;
-        box-shadow:0 20px 40px rgba(0,0,0,0.4);
-        z-index:9999;
-        overflow:hidden;
-        padding:6px;
-    ">
+                    display:none;
+                    position:absolute;
+                    top:calc(100% + 8px);
+                    left:0;
+                    width:100%;
+                    min-width:360px;
+                    background:#141c2b;
+                    border:1px solid rgba(255,255,255,0.08);
+                    border-radius:16px;
+                    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+                    z-index:9999;
+                    overflow:hidden;
+                    padding:6px;
+                ">
                 <div id="searchResults"></div>
                 <div id="searchEmpty"
                     style="display:none; padding:20px; text-align:center; color:#64748b; font-size:13px;">
@@ -745,30 +831,13 @@
                 let lastQ = '';
 
                 const typeColors = {
-                    booking: {
-                        bg: 'rgba(167,139,250,0.12)',
-                        border: 'rgba(167,139,250,0.2)'
-                    },
-                    user: {
-                        bg: 'rgba(78,168,255,0.12)',
-                        border: 'rgba(78,168,255,0.2)'
-                    },
-                    fasilitas: {
-                        bg: 'rgba(52,245,161,0.12)',
-                        border: 'rgba(52,245,161,0.2)'
-                    },
-                    pembayaran: {
-                        bg: 'rgba(250,204,21,0.12)',
-                        border: 'rgba(250,204,21,0.2)'
-                    },
+                    booking: { bg: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.2)' },
+                    user: { bg: 'rgba(78,168,255,0.12)', border: 'rgba(78,168,255,0.2)' },
+                    fasilitas: { bg: 'rgba(52,245,161,0.12)', border: 'rgba(52,245,161,0.2)' },
+                    pembayaran: { bg: 'rgba(250,204,21,0.12)', border: 'rgba(250,204,21,0.2)' },
                 };
 
-                const typeLabels = {
-                    booking: 'Booking',
-                    user: 'User',
-                    fasilitas: 'Fasilitas',
-                    pembayaran: 'Pembayaran',
-                };
+                const typeLabels = { booking: 'Booking', user: 'User', fasilitas: 'Fasilitas', pembayaran: 'Pembayaran' };
 
                 function renderResults(data) {
                     results.innerHTML = '';
@@ -781,7 +850,6 @@
                         return;
                     }
 
-                    // Group by type
                     const grouped = {};
                     data.forEach(item => {
                         if (!grouped[item.type]) grouped[item.type] = [];
@@ -789,45 +857,28 @@
                     });
 
                     Object.keys(grouped).forEach(type => {
-                        // Section label
                         const label = document.createElement('div');
-                        label.style.cssText =
-                            'padding:8px 10px 4px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#4b5563;';
+                        label.style.cssText = 'padding:8px 10px 4px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#4b5563;';
                         label.textContent = typeLabels[type] || type;
                         results.appendChild(label);
 
                         grouped[type].forEach(item => {
-                            const c = typeColors[item.type] || {
-                                bg: 'rgba(255,255,255,0.05)',
-                                border: 'rgba(255,255,255,0.1)'
-                            };
-
+                            const c = typeColors[item.type] || { bg: 'rgba(0,0,0,0.05)', border: 'rgba(0,0,0,0.1)' };
                             const el = document.createElement('a');
                             el.href = item.url;
-                            el.style.cssText = `
-                    display:flex; align-items:center; gap:10px;
-                    padding:10px; border-radius:12px;
-                    text-decoration:none;
-                    transition:background 0.15s;
-                    margin-bottom:2px;
-                `;
-                            el.onmouseenter = () => el.style.background = 'rgba(255,255,255,0.04)';
+                            el.style.cssText = `display:flex; align-items:center; gap:10px; padding:10px; border-radius:12px; text-decoration:none; transition:background 0.15s; margin-bottom:2px;`;
+                            el.onmouseenter = () => el.style.background = 'rgba(0,0,0,0.04)';
                             el.onmouseleave = () => el.style.background = 'transparent';
-
                             el.innerHTML = `
-                    <div style="width:34px; height:34px; border-radius:10px; background:${c.bg}; border:1px solid ${c.border}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <i class="fa-solid ${item.icon}" style="color:${item.color}; font-size:13px;"></i>
-                    </div>
-                    <div style="flex:1; overflow:hidden;">
-                        <div style="font-size:13px; font-weight:600; color:#f1f5f9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            ${item.title}
-                        </div>
-                        <div style="font-size:11px; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            ${item.subtitle}
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-arrow-right" style="color:#374151; font-size:10px; flex-shrink:0;"></i>
-                `;
+                                <div style="width:34px; height:34px; border-radius:10px; background:${c.bg}; border:1px solid ${c.border}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                    <i class="fa-solid ${item.icon}" style="color:${item.color}; font-size:13px;"></i>
+                                </div>
+                                <div style="flex:1; overflow:hidden;">
+                                    <div style="font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.title}</div>
+                                    <div style="font-size:11px; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.subtitle}</div>
+                                </div>
+                                <i class="fa-solid fa-arrow-right" style="color:var(--text-3); font-size:10px; flex-shrink:0;"></i>
+                            `;
                             results.appendChild(el);
                         });
                     });
@@ -836,57 +887,30 @@
                 function doSearch(q) {
                     if (q === lastQ) return;
                     lastQ = q;
-
-                    if (q.length < 2) {
-                        dropdown.style.display = 'none';
-                        return;
-                    }
-
+                    if (q.length < 2) { dropdown.style.display = 'none'; return; }
                     spinner.style.display = 'block';
                     dropdown.style.display = 'block';
                     results.innerHTML = '';
                     empty.style.display = 'none';
-
-                    fetch(`{{ route('admin.search') }}?q=${encodeURIComponent(q)}`, {
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        })
+                    fetch(`{{ route('admin.search') }}?q=${encodeURIComponent(q)}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                         .then(r => r.json())
                         .then(data => renderResults(data))
-                        .catch(() => {
-                            spinner.style.display = 'none';
-                        });
+                        .catch(() => { spinner.style.display = 'none'; });
                 }
 
-                input.addEventListener('input', function() {
-                    clearTimeout(timer);
-                    timer = setTimeout(() => doSearch(this.value.trim()), 300);
-                });
-
-                input.addEventListener('focus', function() {
-                    if (this.value.trim().length >= 2) {
-                        dropdown.style.display = 'block';
-                    }
-                });
-
-                document.addEventListener('click', function(e) {
-                    if (!document.getElementById('searchWrapper').contains(e.target)) {
-                        dropdown.style.display = 'none';
-                        lastQ = '';
-                    }
-                });
-
-                input.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape') {
-                        dropdown.style.display = 'none';
-                        this.blur();
-                    }
-                });
+                input.addEventListener('input', function() { clearTimeout(timer); timer = setTimeout(() => doSearch(this.value.trim()), 300); });
+                input.addEventListener('focus', function() { if (this.value.trim().length >= 2) dropdown.style.display = 'block'; });
+                document.addEventListener('click', function(e) { if (!document.getElementById('searchWrapper').contains(e.target)) { dropdown.style.display = 'none'; lastQ = ''; } });
+                input.addEventListener('keydown', function(e) { if (e.key === 'Escape') { dropdown.style.display = 'none'; this.blur(); } });
             })();
         </script>
 
         <div class="topbar-right" x-data="{ open: false }">
+            {{-- TOMBOL TOGGLE TEMA --}}
+            <button id="themeToggle" class="icon-btn" title="Ganti Tema">
+                <i id="themeIcon" class="fa-regular fa-sun"></i>
+            </button>
+
             <div class="icon-btn">
                 <i class="fa-regular fa-bell"></i>
                 <span class="dot"></span>
@@ -901,7 +925,6 @@
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                 </button>
 
-                {{-- Dropdown Menu --}}
                 <div x-show="open" x-transition:enter="transition ease-out duration-100"
                     x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="transition ease-in duration-75"
@@ -909,14 +932,12 @@
                     class="absolute right-0 mt-3 w-56 bg-[#20232b] border border-[rgba(255,255,255,0.07)] rounded-xl shadow-2xl z-50 overflow-hidden"
                     style="display: none;">
 
-                    {{-- Header Profil --}}
                     <div class="px-4 py-3 border-bottom border-[rgba(255,255,255,0.07)] bg-[rgba(255,255,255,0.02)]">
                         <p class="text-xs font-bold text-[var(--text-3)] uppercase tracking-wider">Akun Masuk</p>
                         <p class="text-[13.5px] font-semibold text-white truncate">{{ auth()->user()->name }}</p>
                         <p class="text-[11px] text-[var(--text-3)] truncate">{{ auth()->user()->email }}</p>
                     </div>
 
-                    {{-- Links --}}
                     <div class="py-1">
                         <a href="/admin/profile"
                             class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-[var(--text-2)] hover:bg-[rgba(255,255,255,0.05)] hover:text-white transition-all">
@@ -928,7 +949,6 @@
                         </a>
                     </div>
 
-                    {{-- Logout Section --}}
                     <div class="border-t border-[rgba(255,255,255,0.07)] py-1 bg-[rgba(239,68,68,0.02)]">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -983,7 +1003,7 @@
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('overlay').classList.remove('open');
         }
-        // Tampilkan hamburger di mobile
+
         function checkMobile() {
             const ham = document.getElementById('hamburger');
             if (window.innerWidth <= 768) ham.style.display = 'block';
@@ -991,6 +1011,52 @@
         }
         checkMobile();
         window.addEventListener('resize', checkMobile);
+    </script>
+
+    {{-- THEME TOGGLE SCRIPT --}}
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                const icon = document.getElementById('themeIcon');
+                if (icon) icon.className = 'fa-regular fa-moon';
+            } else if (savedTheme === 'dark') {
+                document.body.classList.remove('light-mode');
+                const icon = document.getElementById('themeIcon');
+                if (icon) icon.className = 'fa-regular fa-sun';
+            } else if (prefersDark) {
+                document.body.classList.remove('light-mode');
+                const icon = document.getElementById('themeIcon');
+                if (icon) icon.className = 'fa-regular fa-sun';
+            } else {
+                document.body.classList.add('light-mode');
+                const icon = document.getElementById('themeIcon');
+                if (icon) icon.className = 'fa-regular fa-moon';
+            }
+            
+            function toggleTheme() {
+                const isLightMode = document.body.classList.contains('light-mode');
+                const icon = document.getElementById('themeIcon');
+                
+                if (isLightMode) {
+                    document.body.classList.remove('light-mode');
+                    if (icon) icon.className = 'fa-regular fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.add('light-mode');
+                    if (icon) icon.className = 'fa-regular fa-moon';
+                    localStorage.setItem('theme', 'light');
+                }
+            }
+            
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+        })();
     </script>
 
     @stack('scripts')

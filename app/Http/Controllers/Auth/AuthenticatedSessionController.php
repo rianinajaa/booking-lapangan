@@ -11,17 +11,11 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
@@ -32,14 +26,10 @@ class AuthenticatedSessionController extends Controller
 
         return match($role) {
             'admin' => redirect()->intended(route('admin.dashboard')),
-            'guru'  => redirect()->intended(route('guru.dashboard')),
             default => redirect()->intended(route('user.dashboard')),
         };
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

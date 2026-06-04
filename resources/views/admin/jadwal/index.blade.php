@@ -67,6 +67,104 @@
             20% { left: 100%; }
             100% { left: 100%; }
         }
+
+        /* ========== LIGHT MODE STYLES ========== */
+        body.light-mode .main {
+            background-color: #f1f5f9 !important;
+        }
+
+        body.light-mode .schedule-card {
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            backdrop-filter: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-mode .schedule-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent) !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 217, 139, 0.2);
+        }
+
+        body.light-mode h1, 
+        body.light-mode h3 {
+            color: #1e293b !important;
+        }
+
+        body.light-mode .card[style*="background:rgba(255,255,255,0.03)"] {
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        body.light-mode .glass-input {
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #1e293b !important;
+        }
+
+        body.light-mode .glass-input:focus {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 15px rgba(0, 217, 139, 0.2) !important;
+        }
+
+        body.light-mode .glass-input::placeholder {
+            color: #94a3b8 !important;
+        }
+
+        body.light-mode button.btn[style*="background:rgba(255,255,255,0.05)"] {
+            background: #f1f5f9 !important;
+            color: #1e293b !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        body.light-mode .fa-magnifying-glass {
+            color: #059669 !important;
+        }
+
+        body.light-mode .fa-clock {
+            color: rgba(0, 0, 0, 0.1) !important;
+        }
+
+        body.light-mode div[style*="background:rgba(0,0,0,0.3)"] {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        body.light-mode div[style*="color:rgba(255,255,255,0.4)"] {
+            color: #64748b !important;
+        }
+
+        body.light-mode div[style*="color:white"] {
+            color: #1e293b !important;
+        }
+
+        body.light-mode span[style*="color:rgba(255,255,255,0.4)"] {
+            color: #64748b !important;
+        }
+
+        body.light-mode a[style*="background:rgba(255,255,255,0.05)"] {
+            background: #f8fafc !important;
+            color: #475569 !important;
+        }
+
+        body.light-mode a[style*="background:rgba(255,255,255,0.05)"]:hover {
+            background: #f1f5f9 !important;
+            color: var(--accent) !important;
+        }
+
+        body.light-mode button[style*="background:rgba(255,71,87,0.1)"] {
+            background: #fef2f2 !important;
+            color: #dc2626 !important;
+        }
+
+        body.light-mode .status-badge::after {
+            background: linear-gradient(45deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+        }
+
+        /* Light mode untuk empty state */
+        body.light-mode p[style*="color:white"] {
+            color: #64748b !important;
+        }
     </style>
 
     {{-- Header --}}
@@ -82,7 +180,7 @@
         </div>
 
         <a href="{{ route('admin.jadwal.create') }}" class="btn"
-            style="padding:12px 24px; border-radius:16px; font-weight:700; background:var(--accent); color:#000; box-shadow: 0 10px 20px var(--accent-glow);">
+            style="padding:12px 24px; border-radius:16px; font-weight:700; background:var(--accent); color:#000; box-shadow: 0 10px 20px var(--accent-glow); text-decoration:none;">
             <i class="fa-solid fa-plus me-2"></i> Buat Jadwal Baru
         </a>
     </div>
@@ -95,7 +193,7 @@
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama fasilitas..."
                     class="glass-input" style="width:100%; border-radius:16px; padding:14px 14px 14px 48px; font-size:14px;">
             </div>
-            <button type="submit" class="btn" style="border-radius:16px; padding:0 25px; background:rgba(255,255,255,0.05); color:white; border:1px solid var(--glass-border);">
+            <button type="submit" class="btn" style="border-radius:16px; padding:0 25px; background:rgba(255,255,255,0.05); color:white; border:1px solid var(--glass-border); cursor:pointer;">
                 Filter
             </button>
         </form>
@@ -175,24 +273,32 @@
                         </button>
                     </form>
                     <a href="{{ route('admin.jadwal.edit', $jadwal->id) }}"
-                        style="width:45px; height:45px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05); border-radius:16px; color:white;"><i
-                            class="fa-solid fa-pen"></i></a>
+                        style="width:45px; height:45px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05); border-radius:16px; color:white; text-decoration:none;">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
                 </div>
             </div>
         @empty
-            <p style="color:white; grid-column:1/-1; text-align:center;">Data tidak ditemukan.</p>
+            <div style="grid-column:1/-1; text-align:center; padding:80px 0;">
+                <i class="fa-solid fa-calendar-xmark" style="font-size:60px; color:rgba(255,255,255,0.1); margin-bottom:20px;"></i>
+                <h3 style="color:white; margin-bottom:8px;">Data Tidak Ditemukan</h3>
+                <p style="color:rgba(255,255,255,0.4);">Belum ada jadwal yang terdaftar.</p>
+            </div>
         @endforelse
     </div>
 
     <script>
         // Efek Spotlight Mouse
-        document.getElementById('schedule-grid').onmousemove = e => {
-            for (const card of document.getElementsByClassName('schedule-card')) {
-                const rect = card.getBoundingClientRect(),
-                    x = e.clientX - rect.left,
-                    y = e.clientY - rect.top;
-                card.style.setProperty("--mouse-x", `${x}px`);
-                card.style.setProperty("--mouse-y", `${y}px`);
+        const grid = document.getElementById('schedule-grid');
+        if (grid) {
+            grid.onmousemove = e => {
+                for (const card of document.getElementsByClassName('schedule-card')) {
+                    const rect = card.getBoundingClientRect(),
+                        x = e.clientX - rect.left,
+                        y = e.clientY - rect.top;
+                    card.style.setProperty("--mouse-x", `${x}px`);
+                    card.style.setProperty("--mouse-y", `${y}px`);
+                }
             }
         }
     </script>

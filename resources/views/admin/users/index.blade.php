@@ -71,6 +71,153 @@
     .stat-pill:hover {
         background: rgba(255,255,255,0.05);
     }
+
+    /* ========== LIGHT MODE STYLES ========== */
+    body.light-mode .main {
+        background-color: #f1f5f9 !important;
+    }
+
+    body.light-mode .user-card-premium {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        backdrop-filter: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    body.light-mode .user-card-premium:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent) !important;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 217, 139, 0.2);
+    }
+
+    body.light-mode h1, 
+    body.light-mode h3 {
+        color: #1e293b !important;
+    }
+
+    body.light-mode .stat-pill {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+    body.light-mode .stat-pill:hover {
+        background: #f1f5f9;
+    }
+
+    body.light-mode .glass-input-user {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode .glass-input-user:focus {
+        border-color: var(--accent) !important;
+        box-shadow: 0 0 15px rgba(0, 217, 139, 0.2) !important;
+    }
+
+    body.light-mode .glass-input-user::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    body.light-mode button[style*="background:rgba(255,255,255,0.05)"],
+    body.light-mode .btn[style*="background:rgba(255,255,255,0.05)"] {
+        background: #f1f5f9 !important;
+        color: #1e293b !important;
+        border-color: #e2e8f0 !important;
+    }
+
+    body.light-mode a[style*="border:1px solid rgba(239,68,68,0.2)"] {
+        border-color: #fecaca !important;
+        color: #ef4444 !important;
+        background: #fef2f2 !important;
+    }
+
+    body.light-mode a[style*="border:1px solid rgba(239,68,68,0.2)"]:hover {
+        background: #fee2e2 !important;
+    }
+
+    body.light-mode .avatar-ring div div {
+        border-color: #ffffff !important;
+    }
+
+    body.light-mode p[style*="color:rgba(255,255,255,0.4)"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode small[style*="color:rgba(255,255,255,0.3)"] {
+        color: #94a3b8 !important;
+    }
+
+    body.light-mode span[style*="background:rgba(255,255,255,0.1)"] {
+        background: #f1f5f9 !important;
+        color: #475569 !important;
+    }
+
+    body.light-mode span[style*="background:var(--accent)"] {
+        background: var(--accent) !important;
+        color: #000000 !important;
+    }
+
+    body.light-mode a[style*="background:rgba(255,255,255,0.03)"] {
+        background: #f8fafc !important;
+        border-color: #e2e8f0 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode a[style*="background:rgba(255,255,255,0.03)"]:hover {
+        background: #f1f5f9 !important;
+    }
+
+    body.light-mode button[style*="background:rgba(239,68,68,0.1)"] {
+        background: #fef2f2 !important;
+        border-color: #fecaca !important;
+        color: #ef4444 !important;
+    }
+
+    body.light-mode button[style*="background:rgba(239,68,68,0.1)"]:hover {
+        background: #fee2e2 !important;
+    }
+
+    body.light-mode .fa-users-slash {
+        color: #cbd5e1 !important;
+    }
+
+    body.light-mode h3[style*="opacity:0.5"] {
+        color: #64748b !important;
+        opacity: 1 !important;
+    }
+
+    body.light-mode span[style*="color:var(--accent)"] {
+        color: #059669 !important;
+    }
+
+    body.light-mode span[style*="color:rgba(255,255,255,0.2)"] {
+        color: #cbd5e1 !important;
+    }
+
+    body.light-mode .fa-magnifying-glass {
+        color: #059669 !important;
+    }
+
+    body.light-mode div[style*="background:var(--accent)"] {
+        background: #059669 !important;
+    }
+
+    body.light-mode [style*="border:1px solid var(--glass-border)"] {
+        border-color: #e2e8f0 !important;
+    }
+
+    body.light-mode [style*="box-shadow: 0 10px 20px var(--accent-glow)"] {
+        box-shadow: 0 10px 20px rgba(0, 217, 139, 0.2) !important;
+    }
+
+    body.light-mode [style*="color:white"] {
+        color: #1e293b !important;
+    }
+
+    body.light-mode .avatar-ring {
+        background: linear-gradient(45deg, #059669, transparent);
+    }
 </style>
 
 {{-- Header Section --}}
@@ -86,10 +233,26 @@
     </div>
 
     <a href="{{ route('admin.users.create') }}" class="btn animate-reveal"
-       style="padding:14px 28px; border-radius:18px; font-weight:700; background: var(--accent); color: #000; border:none; box-shadow: 0 10px 20px var(--accent-glow);">
+       style="padding:14px 28px; border-radius:18px; font-weight:700; background: var(--accent); color: #000; border:none; box-shadow: 0 10px 20px var(--accent-glow); text-decoration:none;">
         <i class="fa-solid fa-user-plus me-2"></i> Tambah User
     </a>
 </div>
+
+{{-- Alert Success --}}
+@if(session('success'))
+    <div class="animate-reveal" style="background:rgba(0,217,139,0.1); border-left:4px solid var(--accent); color:white; border-radius:12px; padding:16px 20px; font-size:14px; margin-bottom:24px; display:flex; align-items:center; gap:12px; backdrop-filter:blur(10px);">
+        <i class="fa-solid fa-circle-check" style="color:var(--accent); font-size:18px;"></i>
+        {{ session('success') }}
+    </div>
+@endif
+
+{{-- Alert Error --}}
+@if(session('error'))
+    <div class="animate-reveal" style="background:rgba(239,68,68,0.1); border-left:4px solid #f87171; color:#f87171; border-radius:12px; padding:16px 20px; font-size:14px; margin-bottom:24px; display:flex; align-items:center; gap:12px; backdrop-filter:blur(10px);">
+        <i class="fa-solid fa-circle-exclamation" style="color:#f87171; font-size:18px;"></i>
+        {{ session('error') }}
+    </div>
+@endif
 
 {{-- Search & Filter --}}
 <div class="animate-reveal" style="margin-bottom:30px;">
@@ -98,12 +261,12 @@
             <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--accent); opacity:0.6;"></i>
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan nama atau email..." class="glass-input-user" style="width:100%; padding:14px 14px 14px 45px;">
         </div>
-        <button type="submit" class="btn" style="border-radius:14px; background:rgba(255,255,255,0.05); color:white; border:1px solid var(--glass-border); padding:0 25px;">
+        <button type="submit" class="btn" style="border-radius:14px; background:rgba(255,255,255,0.05); color:white; border:1px solid var(--glass-border); padding:0 25px; cursor:pointer;">
             Cari Pengguna
         </button>
         @if(request('search'))
-            <a href="{{ route('admin.users.index') }}" class="btn" style="border-radius:14px; border:1px solid rgba(239,68,68,0.2); color:#f87171;">
-                <i class="fa-solid fa-rotate-right"></i>
+            <a href="{{ route('admin.users.index') }}" class="btn" style="border-radius:14px; border:1px solid rgba(239,68,68,0.2); color:#f87171; text-decoration:none; display:inline-flex; align-items:center; padding:0 25px;">
+                <i class="fa-solid fa-rotate-right"></i> Reset
             </a>
         @endif
     </form>
@@ -116,8 +279,14 @@
             $firstLetter = strtolower(substr($user->name, 0, 1));
             $avatarColors = [
                 'a' => '#8b5cf6', 'b' => '#10b981', 'c' => '#3b82f6',
-                'd' => '#f59e0b', 'e' => '#ef4444', 'g' => '#ec4899',
-                'm' => '#06b6d4', 'r' => '#3b82f6', 's' => '#f43f5e'
+                'd' => '#f59e0b', 'e' => '#ef4444', 'f' => '#8b5cf6',
+                'g' => '#ec4899', 'h' => '#06b6d4', 'i' => '#f43f5e',
+                'j' => '#8b5cf6', 'k' => '#10b981', 'l' => '#3b82f6',
+                'm' => '#06b6d4', 'n' => '#f59e0b', 'o' => '#ef4444',
+                'p' => '#ec4899', 'q' => '#8b5cf6', 'r' => '#3b82f6',
+                's' => '#f43f5e', 't' => '#10b981', 'u' => '#f59e0b',
+                'v' => '#ec4899', 'w' => '#06b6d4', 'x' => '#8b5cf6',
+                'y' => '#f43f5e', 'z' => '#3b82f6'
             ];
             $avatarBg = $avatarColors[$firstLetter] ?? '#64748b';
             $isActive = ($user->bookings_count > 0 || $user->role === 'admin');
@@ -164,12 +333,20 @@
                     <i class="fa-solid fa-user-gear me-2"></i> Edit
                 </a>
 
-                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="flex:1;" onsubmit="return confirm('Hapus pengguna ini permanen?')">
-                    @csrf @method('DELETE')
-                    <button type="submit" style="width:100%; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:14px; padding:12px; color:#f87171; font-size:13px; font-weight:700; cursor:pointer; transition:0.2s;">
-                        <i class="fa-solid fa-trash-can me-2"></i> Hapus
-                    </button>
-                </form>
+                {{-- CEK: Jangan tampilkan tombol hapus untuk akun sendiri --}}
+                @if(auth()->id() !== $user->id)
+                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="flex:1;" onsubmit="return confirm('Hapus pengguna ini permanen? Data booking yang terkait juga akan terpengaruh.')">
+                        @csrf 
+                        @method('DELETE')
+                        <button type="submit" style="width:100%; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:14px; padding:12px; color:#f87171; font-size:13px; font-weight:700; cursor:pointer; transition:0.2s;">
+                            <i class="fa-solid fa-trash-can me-2"></i> Hapus
+                        </button>
+                    </form>
+                @else
+                    <div style="flex:1; background:rgba(100,100,100,0.05); border:1px solid rgba(100,100,100,0.2); border-radius:14px; padding:12px; color:#94a3b8; font-size:13px; font-weight:700; text-align:center; cursor:not-allowed;">
+                        <i class="fa-solid fa-lock me-2"></i> Akun Sendiri
+                    </div>
+                @endif
             </div>
 
             {{-- Status Dot --}}
@@ -186,4 +363,15 @@
         </div>
     @endforelse
 </div>
+
+{{-- Pagination --}}
+@if($users->hasPages())
+    <div style="margin-top:40px; padding:20px; background:rgba(0,0,0,0.2); border-radius:24px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--glass-border); flex-wrap:wrap; gap:15px;">
+        <span style="font-size:13px; color:rgba(255,255,255,0.4);">Menampilkan <b>{{ $users->firstItem() }} - {{ $users->lastItem() }}</b> dari {{ $users->total() }} pengguna</span>
+        <div class="modern-pagination">
+            {{ $users->withQueryString()->links() }}
+        </div>
+    </div>
+@endif
+
 @endsection

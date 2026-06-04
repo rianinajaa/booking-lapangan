@@ -25,6 +25,7 @@
         overflow: hidden;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transition: background 0.3s ease, border-color 0.3s ease;
     }
 
     @keyframes slideUp {
@@ -116,11 +117,128 @@
         border: none !important;
         transition: all 0.3s ease !important;
         box-shadow: 0 10px 20px var(--accent-glow);
+        cursor: pointer;
     }
 
     .btn-save:hover {
         transform: translateY(-3px);
         box-shadow: 0 15px 25px var(--accent-glow);
+    }
+
+    /* ========== LIGHT MODE STYLES ========== */
+    body.light-mode .glass-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        backdrop-filter: none;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .glass-card div[style*="background: linear-gradient"] {
+        background: linear-gradient(to right, rgba(0, 217, 139, 0.08), transparent) !important;
+    }
+
+    body.light-mode .glass-card h2 {
+        color: #1e293b !important;
+    }
+
+    body.light-mode .glass-card p[style*="color: #94a3b8"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode .form-label {
+        color: #059669 !important;
+    }
+
+    body.light-mode .glass-input,
+    body.light-mode .glass-select {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode .glass-input::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    body.light-mode .glass-input:focus,
+    body.light-mode .glass-select:focus {
+        border-color: #059669 !important;
+        background: #f8fafc !important;
+        box-shadow: 0 0 15px rgba(5, 150, 105, 0.2);
+    }
+
+    body.light-mode .glass-select option {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode .radio-card {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+    }
+
+    body.light-mode .radio-card:hover {
+        background: #f1f5f9;
+    }
+
+    body.light-mode .radio-card span[style*="color: white"] {
+        color: #1e293b !important;
+    }
+
+    body.light-mode .radio-card span[style*="color: #64748b"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode input[type="radio"]:checked + .radio-card {
+        border-color: #059669;
+        background: rgba(5, 150, 105, 0.08);
+    }
+
+    body.light-mode input[type="radio"]:checked + .radio-card .dot.open {
+        background: #059669;
+        box-shadow: 0 0 10px #059669;
+    }
+
+    body.light-mode input[type="radio"]:checked + .radio-card .dot.closed {
+        background: #dc2626;
+        box-shadow: 0 0 10px #dc2626;
+    }
+
+    body.light-mode .dot {
+        background: #cbd5e1;
+    }
+
+    body.light-mode .btn-save {
+        background: #059669 !important;
+        color: #ffffff !important;
+        box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);
+    }
+
+    body.light-mode .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px rgba(5, 150, 105, 0.4);
+    }
+
+    body.light-mode a[style*="color: #94a3b8"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode a[style*="color: #94a3b8"]:hover {
+        color: #dc2626 !important;
+    }
+
+    body.light-mode div[style*="border-top: 1px solid var(--glass-border)"] {
+        border-top-color: #e2e8f0 !important;
+    }
+
+    body.light-mode .fa-building-circle-check {
+        color: #059669 !important;
+        opacity: 0.7 !important;
+    }
+
+    /* Fix for time input in light mode */
+    body.light-mode input[type="time"] {
+        color-scheme: light;
     }
 </style>
 
@@ -141,8 +259,8 @@
             <div class="form-group">
                 <label class="form-label">Target Fasilitas</label>
                 <div style="position: relative;">
-                    <i class="fa-solid fa-building-circle-check" style="position: absolute; right: 18px; top: 18px; color: var(--accent); opacity: 0.5;"></i>
-                    <select name="fasilitas_id" required class="glass-select">
+                    <i class="fa-solid fa-building-circle-check" style="position: absolute; right: 18px; top: 18px; color: var(--accent); opacity: 0.5; z-index: 1;"></i>
+                    <select name="fasilitas_id" required class="glass-select" style="appearance: none;">
                         <option value="" disabled selected>Pilih salah satu fasilitas...</option>
                         @foreach($fasilitas as $f)
                             <option value="{{ $f->id }}" {{ old('fasilitas_id') == $f->id ? 'selected' : '' }}>
@@ -173,7 +291,7 @@
                 <label class="form-label">Status Awal</label>
                 <div class="radio-container">
                     {{-- Option Open --}}
-                    <label style="cursor: pointer;">
+                    <label style="cursor: pointer; width: 100%;">
                         <input type="radio" name="is_libur" value="0" {{ old('is_libur', '0') == '0' ? 'checked' : '' }} style="display: none;">
                         <div class="radio-card">
                             <div class="dot open"></div>
@@ -185,7 +303,7 @@
                     </label>
 
                     {{-- Option Holiday --}}
-                    <label style="cursor: pointer;">
+                    <label style="cursor: pointer; width: 100%;">
                         <input type="radio" name="is_libur" value="1" {{ old('is_libur') == '1' ? 'checked' : '' }} style="display: none;">
                         <div class="radio-card">
                             <div class="dot closed"></div>
@@ -211,4 +329,19 @@
         </form>
     </div>
 </div>
+
+<script>
+    // Fix radio button styling - ensure proper click handling
+    document.querySelectorAll('.radio-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const radio = this.parentElement.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+                // Trigger change event to update any dependent logic
+                const event = new Event('change', { bubbles: true });
+                radio.dispatchEvent(event);
+            }
+        });
+    });
+</script>
 @endsection

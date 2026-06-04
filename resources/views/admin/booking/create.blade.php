@@ -17,6 +17,7 @@
         --text-gray: #94a3b8;
     }
 
+    /* Dark mode (default) */
     body {
         font-family: 'Plus Jakarta Sans', sans-serif;
         background: var(--bg-dark);
@@ -28,6 +29,7 @@
 
     .form-header { margin-bottom: 40px; text-align: center; }
     .form-header h2 { font-weight: 800; font-size: 34px; letter-spacing: -1px; margin-bottom: 8px; }
+    .form-header h2 span { color: var(--primary); }
 
     .glass-form-card {
         background: var(--card-bg);
@@ -35,6 +37,7 @@
         border-radius: 32px;
         padding: 45px;
         box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
+        transition: background 0.3s ease, border-color 0.3s ease;
     }
 
     .form-group-custom { margin-bottom: 28px; }
@@ -68,7 +71,6 @@
         appearance: none;
     }
 
-    /* --- FIX FLASHBANG SELECT OPTIONS --- */
     .form-control-custom option {
         background-color: #1f2937 !important;
         color: white !important;
@@ -121,6 +123,89 @@
 
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    /* ========== LIGHT MODE STYLES ========== */
+    body.light-mode {
+        background: #f1f5f9 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode .create-container {
+        color: #1e293b;
+    }
+
+    body.light-mode .glass-form-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .label-custom {
+        color: #1e293b !important;
+    }
+
+    body.light-mode .form-control-custom {
+        background-color: #ffffff !important;
+        border: 2px solid #e2e8f0 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode .form-control-custom option {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode .form-control-custom:focus {
+        border-color: var(--primary);
+        background-color: #f8fafc !important;
+    }
+
+    body.light-mode select.form-control-custom {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2300d98b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    }
+
+    body.light-mode .price-info-box {
+        background: rgba(0, 217, 139, 0.08);
+        border: 1px dashed var(--primary);
+    }
+
+    body.light-mode .price-info-item span {
+        color: #64748b;
+    }
+
+    body.light-mode .price-info-item strong {
+        color: #059669;
+    }
+
+    body.light-mode .btn-submit {
+        background: #059669;
+        color: #ffffff;
+    }
+
+    body.light-mode .btn-submit:hover {
+        box-shadow: 0 15px 30px rgba(5, 150, 105, 0.4);
+    }
+
+    body.light-mode .btn-cancel {
+        color: #64748b;
+    }
+
+    body.light-mode .btn-cancel:hover {
+        color: #dc2626;
+    }
+
+    body.light-mode .form-header p {
+        color: #64748b !important;
+    }
+
+    body.light-mode .input-wrapper i {
+        color: #059669;
+    }
+
+    body.light-mode .form-control-custom[readonly] {
+        background: rgba(5, 150, 105, 0.05) !important;
+        border-color: #059669 !important;
+    }
 </style>
 
 <div class="create-container">
@@ -185,7 +270,6 @@
                             <option value="" disabled selected>— Pilih Fasilitas —</option>
                             @foreach($fasilitas as $f)
                                 <option value="{{ $f->id }}" data-harga="{{ $f->harga_per_jam ?? 0 }}">
-                                    {{-- FIX: Cek berbagai kemungkinan nama kolom database --}}
                                     {{ $f->nama_fasilitas ?? $f->nama ?? $f->nama_lapangan ?? 'Fasilitas #'.$f->id }}
                                     (Rp {{ number_format($f->harga_per_jam ?? 0, 0, ',', '.') }}/jam)
                                 </option>
@@ -264,26 +348,21 @@
 
             let durasi = 0;
             if (jamMulai.value && jamSelesai.value) {
-                // Trik Pecah String Waktu (Aman dari Bug format AM/PM Browser)
                 const startParts = jamMulai.value.split(':');
                 const endParts = jamSelesai.value.split(':');
 
-                // Ambil jam dan menit murni
                 const startHour = parseInt(startParts[0], 10);
                 const startMin = parseInt(startParts[1], 10);
                 const endHour = parseInt(endParts[0], 10);
                 const endMin = parseInt(endParts[1], 10);
 
-                // Convert semuanya ke dalam satuan Menit murni
                 let totalMenitMulai = (startHour * 60) + startMin;
                 let totalMenitSelesai = (endHour * 60) + endMin;
 
-                // Handle jika waktu sewa melewati tengah malam (contoh: 22:00 - 01:00)
                 if (totalMenitSelesai < totalMenitMulai) {
-                    totalMenitSelesai += 24 * 60; // Tambah durasi 1 hari (1440 menit)
+                    totalMenitSelesai += 24 * 60;
                 }
 
-                // Hitung selisih jam bersih
                 let selisihMenit = totalMenitSelesai - totalMenitMulai;
                 durasi = selisihMenit / 60;
             }
@@ -293,16 +372,13 @@
             const nominalPotongan = (diskonPersen / 100) * subtotal;
             const totalAkhir = subtotal - nominalPotongan;
 
-            // Tampilkan data hasil kalkulasi ke element info box
             labelDurasi.innerText = durasi.toFixed(1) + " Jam";
             labelHargaJam.innerText = "Rp " + hargaPerJam.toLocaleString('id-ID');
             labelPotongan.innerText = "- Rp " + Math.round(nominalPotongan).toLocaleString('id-ID');
 
-            // Set value ke input form utama agar terkirim ke Controller pas di-submit
             totalInput.value = Math.round(totalAkhir);
         }
 
-        // Dengerin setiap kali user ngetik atau mindahin inputan
         [fasilitasSelect, jamMulai, jamSelesai, diskonInput].forEach(el => {
             el.addEventListener('input', hitungSemua);
             el.addEventListener('change', hitungSemua);

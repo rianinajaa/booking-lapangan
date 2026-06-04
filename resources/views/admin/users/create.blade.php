@@ -10,6 +10,77 @@
 @endsection
 
 @section('content')
+<style>
+    /* Light mode styles for create user page */
+    body.light-mode .card[style*="background: #12192d"] {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    body.light-mode h1[style*="color:var(--text)"] {
+        color: #1e293b !important;
+    }
+
+    body.light-mode p[style*="color:var(--text-3)"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode label[style*="color: var(--text-2)"] {
+        color: #475569 !important;
+    }
+
+    body.light-mode input[style*="background:rgba(0,0,0,0.2)"] {
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode input[style*="background:rgba(0,0,0,0.2)"]::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    body.light-mode select[style*="background:#12192d"] {
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode select[style*="background:#12192d"] option {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode a.btn-outline[style*="color: #fff"] {
+        color: #475569 !important;
+        border-color: #e2e8f0 !important;
+        background: #f8fafc !important;
+    }
+
+    body.light-mode a.btn-outline[style*="color: #fff"]:hover {
+        background: #f1f5f9 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode button[style*="background: #00d98b"] {
+        background: #059669 !important;
+        color: #ffffff !important;
+    }
+
+    body.light-mode button[style*="background: #00d98b"]:hover {
+        background: #047857 !important;
+    }
+
+    body.light-mode div[style*="background:rgba(239,68,68,0.1)"] {
+        background: #fef2f2 !important;
+        border: 1px solid #fecaca !important;
+        color: #dc2626 !important;
+    }
+
+    body.light-mode div[style*="border-top: 1px solid rgba(255,255,255,0.06)"] {
+        border-top-color: #e2e8f0 !important;
+    }
+</style>
+
 <div style="max-width: 600px; margin: 0 auto;">
 
     <div style="margin-bottom: 24px;">
@@ -20,7 +91,7 @@
     {{-- Error Handling --}}
     @if ($errors->any())
         <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); color:#ef4444; border-radius:10px; padding:12px 16px; font-size:13px; margin-bottom:20px;">
-            <ul class="mb-0" style="padding-left: 20px;">
+            <ul class="mb-0" style="padding-left: 20px; margin: 0;">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -60,7 +131,7 @@
             </div>
 
             {{-- Tombol Submit --}}
-            <div style="display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.06); pt: 20px; padding-top: 16px;">
+            <div style="display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px;">
                 <a href="{{ route('admin.users.index') }}" class="btn btn-outline" style="color: #fff; border-color: rgba(255,255,255,0.1); border-radius:8px; text-decoration:none; display:flex; align-items:center; height:38px; padding:0 16px; font-size:13px;">Batal</a>
                 <button type="submit" class="btn" style="background: #00d98b; color: #000; font-weight:700; border-radius:8px; height:38px; padding:0 20px; font-size:13px; border:none; cursor:pointer;">Simpan User</button>
             </div>

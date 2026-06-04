@@ -25,6 +25,7 @@
         overflow: hidden;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         animation: fadeIn 0.5s ease-out;
+        transition: background 0.3s ease, border-color 0.3s ease;
     }
 
     @keyframes fadeIn {
@@ -95,6 +96,120 @@
         border-radius: 0 15px 15px 0;
         margin-top: 10px;
     }
+
+    /* ========== LIGHT MODE STYLES ========== */
+    body.light-mode .glass-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        backdrop-filter: none;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .glass-card div[style*="border-bottom: 1px solid var(--glass-border)"] {
+        border-bottom-color: #e2e8f0 !important;
+    }
+
+    body.light-mode .glass-card h2 {
+        color: #1e293b !important;
+    }
+
+    body.light-mode .glass-card p[style*="color: #64748b"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode .form-label {
+        color: #059669 !important;
+    }
+
+    body.light-mode .glass-input,
+    body.light-mode .glass-select {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode .glass-input::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    body.light-mode .glass-input:focus {
+        border-color: #059669 !important;
+        background: #f8fafc !important;
+        box-shadow: 0 0 20px rgba(5, 150, 105, 0.2);
+    }
+
+    body.light-mode .glass-select option {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode .status-option {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+    }
+
+    body.light-mode .status-option div[style*="color: white"] {
+        color: #1e293b !important;
+    }
+
+    body.light-mode input[type="radio"]:checked + .status-option {
+        border-color: #059669;
+        background: rgba(5, 150, 105, 0.08);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    body.light-mode input[type="radio"]:checked + .status-option .indicator.online {
+        background: #059669;
+        box-shadow: 0 0 12px #059669;
+    }
+
+    body.light-mode .indicator {
+        background: #cbd5e1;
+    }
+
+    body.light-mode .duration-badge {
+        background: linear-gradient(90deg, rgba(5, 150, 105, 0.08), transparent);
+        border-left-color: #059669;
+    }
+
+    body.light-mode .duration-badge span[style*="color: #94a3b8"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode .duration-badge div[style*="color: white"] {
+        color: #1e293b !important;
+    }
+
+    body.light-mode a[style*="color: #94a3b8"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode a[style*="color: #94a3b8"]:hover {
+        color: #dc2626 !important;
+    }
+
+    body.light-mode button[style*="background: var(--accent)"] {
+        background: #059669 !important;
+        color: #ffffff !important;
+        box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);
+    }
+
+    body.light-mode button[style*="background: var(--accent)"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(5, 150, 105, 0.4);
+    }
+
+    body.light-mode div[style*="border-top: 1px solid var(--glass-border)"] {
+        border-top-color: #e2e8f0 !important;
+    }
+
+    body.light-mode div[style*="background: var(--accent)"] {
+        background: #059669 !important;
+    }
+
+    body.light-mode input[type="time"] {
+        color-scheme: light;
+    }
 </style>
 
 <div class="glass-card" style="max-width: 750px; margin: 0 auto;">
@@ -116,7 +231,7 @@
             @csrf
             @method('PUT')
 
-            {{-- Fasilitas (Read Only Style / Disabled but visible) --}}
+            {{-- Fasilitas --}}
             <div class="form-group">
                 <label class="form-label">Fasilitas Terpilih</label>
                 <select name="fasilitas_id" required class="glass-select">
@@ -155,7 +270,7 @@
             <div class="form-group" style="margin-top: 30px;">
                 <label class="form-label">Status Operasional</label>
                 <div class="status-container">
-                    <label>
+                    <label style="width: 100%;">
                         <input type="radio" name="is_libur" value="0" {{ old('is_libur', $jadwal->is_libur) == 0 ? 'checked' : '' }} style="display: none;">
                         <div class="status-option">
                             <div class="indicator online"></div>
@@ -166,7 +281,7 @@
                         </div>
                     </label>
 
-                    <label>
+                    <label style="width: 100%;">
                         <input type="radio" name="is_libur" value="1" {{ old('is_libur', $jadwal->is_libur) == 1 ? 'checked' : '' }} style="display: none;">
                         <div class="status-option">
                             <div class="indicator offline"></div>
@@ -216,10 +331,21 @@
         }
     }
 
-    document.getElementById('jam_buka').addEventListener('change', calculateDuration);
-    document.getElementById('jam_tutup').addEventListener('change', calculateDuration);
+    const jamBuka = document.getElementById('jam_buka');
+    const jamTutup = document.getElementById('jam_tutup');
+    
+    if (jamBuka && jamTutup) {
+        jamBuka.addEventListener('change', calculateDuration);
+        jamTutup.addEventListener('change', calculateDuration);
+        calculateDuration();
+    }
 
-    // Jalankan saat pertama load
-    calculateDuration();
+    // Fix status option click
+    document.querySelectorAll('.status-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const radio = this.parentElement.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        });
+    });
 </script>
 @endsection
