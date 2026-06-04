@@ -153,4 +153,56 @@ class BookingController extends Controller
         $booking->delete();
         return redirect()->route('admin.booking.index')->with('success', 'Booking berhasil dihapus!');
     }
+
+    public function konfirmasiBooking($id)
+{
+    $booking = \App\Models\Booking::findOrFail($id);
+    
+    // Ketika ditekan, status booking LANGSUNG INSTAN berubah jadi dikonfirmasi
+    $booking->update([
+        'status_booking' => 'dikonfirmasi'
+    ]);
+
+    // Kita JANGAN mengubah status_bayar di sini. 
+    // Biarkan tetap 'belum_bayar' sampai user datang di hari-H.
+
+    return redirect()->back()->with('success', 'Booking #' . $booking->kode_booking . ' berhasil dikonfirmasi!');
+}
+/**
+ * Update status booking (Finish / Selesai / Batalkan)
+ */
+public function updateStatus(Request $request, Booking $booking)
+{
+    $request->validate([
+        'status' => 'required|in:menunggu,menunggu_verifikasi,menunggu_verifikasi_dp,menunggu_verifikasi_lunas,dp,dikonfirmasi,selesai,dibatalkan'
+    ]);
+
+    $oldStatus = $booking->status_booking;
+    $newStatus = $request->status;
+
+    // Update status booking
+    $booking->update([
+        'status_booking' => $newStatus
+    ]);
+
+    // Jika status diubah menjadi selesai, update status bayar juga
+    if ($newStatus === 'selesai') {
+        if ($booking->pembayaran) {
+            $booking->pembayaran->update([
+                'status_bayar' => 'lunas'
+            ]);
+        }
+    }
+
+    // Jika status diubah menjadi dibatalkan
+    if ($newStatus === 'dibatalkan') {
+        if ($booking->pembayaran) {
+            $booking->pembayaran->update([
+                'status_bayar' => 'dibatalkan'
+            ]);
+        }
+    }
+
+    return redirect()->back()->with('success', 'Status booking berhasil diubah dari "' . $oldStatus . '" menjadi "' . $newStatus . '"!');
+}
 }

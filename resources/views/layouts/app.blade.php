@@ -6,8 +6,14 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>SpaceGo - Booking Fasilitas Sekolah</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&display=swap"
+        rel="stylesheet">
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
@@ -86,13 +92,14 @@
                         "md": "24px"
                     },
                     fontFamily: {
-                        "body-lg": ["Plus Jakarta Sans"],
-                        "body-md": ["Plus Jakarta Sans"],
-                        "label-bold": ["Plus Jakarta Sans"],
-                        "headline-md": ["Plus Jakarta Sans"],
-                        "headline-lg": ["Plus Jakarta Sans"],
-                        "display-xl-mobile": ["Plus Jakarta Sans"],
-                        "display-xl": ["Plus Jakarta Sans"]
+                        sans: ["Outfit", "sans-serif"],
+                        "body-lg": ["Outfit", "sans-serif"],
+                        "body-md": ["Outfit", "sans-serif"],
+                        "label-bold": ["Outfit", "sans-serif"],
+                        "headline-md": ["Outfit", "sans-serif"],
+                        "headline-lg": ["Outfit", "sans-serif"],
+                        "display-xl-mobile": ["Outfit", "sans-serif"],
+                        "display-xl": ["Outfit", "sans-serif"]
                     },
                     fontSize: {
                         "body-lg": ["18px", {
@@ -133,6 +140,12 @@
         }
     </script>
     <style>
+        html,
+        body,
+        * {
+            font-family: 'Outfit', sans-serif;
+        }
+
         .glass-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, .05) 0%, rgba(5, 150, 105, .05) 100%);
             border: 1px solid rgba(133, 248, 195, .2);
@@ -178,14 +191,16 @@
 
         /* TOAST */
         #toast {
-            transform: translateY(100px);
+            transform: translateY(80px);
             opacity: 0;
-            transition: all .4s cubic-bezier(.4, 0, .2, 1)
+            transition: all .4s cubic-bezier(.4, 0, .2, 1);
+            left: 50% !important;
+            transform: translateX(-50%) translateY(80px);
         }
 
         #toast.show {
-            transform: translateY(0);
-            opacity: 1
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         /* MODAL */
@@ -284,9 +299,10 @@
     </style>
 </head>
 
-<body class="bg-void-base text-on-surface font-body-md min-h-screen overflow-x-hidden selection:bg-primary/30 selection:text-primary">
-   <!-- Main Content -->
+<body
+    class="bg-void-base text-on-surface font-body-md min-h-screen overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+    <!-- Main Content -->
     <main">
         @yield('content')
-    </main>
+        </main>
 </body>

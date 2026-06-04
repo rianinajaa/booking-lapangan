@@ -25,6 +25,7 @@
         overflow: hidden;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         animation: reveal 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transition: background 0.3s ease, border-color 0.3s ease;
     }
 
     @keyframes reveal {
@@ -87,6 +88,7 @@
         left: 18px;
         color: var(--accent);
         opacity: 0.7;
+        z-index: 1;
     }
 
     .input-addon input, .input-addon select {
@@ -125,6 +127,123 @@
         background: rgba(239, 68, 68, 0.1);
         border-color: #ef4444;
         color: #f87171;
+    }
+
+    /* ========== LIGHT MODE STYLES ========== */
+    body.light-mode .glass-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        backdrop-filter: none;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .glass-card div[style*="background: linear-gradient"] {
+        background: linear-gradient(to right, rgba(0, 217, 139, 0.08), transparent) !important;
+    }
+
+    body.light-mode .glass-card h2 {
+        color: #1e293b !important;
+    }
+
+    body.light-mode .glass-card p[style*="color: #94a3b8"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode .form-label {
+        color: #059669 !important;
+    }
+
+    body.light-mode .glass-input,
+    body.light-mode .glass-select,
+    body.light-mode .glass-textarea {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode .glass-input::placeholder,
+    body.light-mode .glass-textarea::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    body.light-mode .glass-input:focus,
+    body.light-mode .glass-select:focus,
+    body.light-mode .glass-textarea:focus {
+        border-color: #059669 !important;
+        background: #f8fafc !important;
+        box-shadow: 0 0 15px rgba(5, 150, 105, 0.2);
+    }
+
+    body.light-mode .input-addon i {
+        color: #059669;
+    }
+
+    body.light-mode .upload-zone {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+    }
+
+    body.light-mode .upload-zone:hover {
+        border-color: #059669;
+        background: #f1f5f9;
+    }
+
+    body.light-mode .upload-zone p[style*="color: white"] {
+        color: #1e293b !important;
+    }
+
+    body.light-mode .upload-zone p[style*="color: #64748b"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode .status-pill {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+        color: #475569;
+    }
+
+    body.light-mode input[type="radio"]:checked + .status-pill.active {
+        background: rgba(5, 150, 105, 0.1);
+        border-color: #059669;
+        color: #059669;
+    }
+
+    body.light-mode input[type="radio"]:checked + .status-pill.inactive {
+        background: rgba(220, 38, 38, 0.1);
+        border-color: #dc2626;
+        color: #dc2626;
+    }
+
+    body.light-mode a[style*="color: #94a3b8"] {
+        color: #64748b !important;
+    }
+
+    body.light-mode a[style*="color: #94a3b8"]:hover {
+        color: #dc2626 !important;
+    }
+
+    body.light-mode button[style*="background: var(--accent)"] {
+        background: #059669 !important;
+        color: #ffffff !important;
+        box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);
+    }
+
+    body.light-mode button[style*="background: var(--accent)"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(5, 150, 105, 0.4);
+    }
+
+    body.light-mode div[style*="border-top: 1px solid var(--glass-border)"] {
+        border-top-color: #e2e8f0 !important;
+    }
+
+    body.light-mode .glass-select option {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+    }
+
+    body.light-mode input[type="number"] {
+        -moz-appearance: textfield;
     }
 </style>
 
@@ -216,15 +335,15 @@
                     <div style="margin-bottom: 24px;">
                         <label class="form-label">Status Aset</label>
                         <div class="status-pill-container">
-                            <label style="margin: 0;">
-                                <input type="radio" name="status" value="aktif" {{ old('status', 'aktif') == 'aktif' ? 'checked' : '' }} style="display: none;">
-                                <div class="status-pill active">
+                            <label style="margin: 0; width: 100%;">
+                                <input type="radio" name="status" value="aktif" id="status_aktif" {{ old('status', 'aktif') == 'aktif' ? 'checked' : '' }} style="display: none;">
+                                <div class="status-pill active" onclick="document.getElementById('status_aktif').click()">
                                     <i class="fa-solid fa-circle-check"></i> Aktif
                                 </div>
                             </label>
-                            <label style="margin: 0;">
-                                <input type="radio" name="status" value="nonaktif" {{ old('status') == 'nonaktif' ? 'checked' : '' }} style="display: none;">
-                                <div class="status-pill inactive">
+                            <label style="margin: 0; width: 100%;">
+                                <input type="radio" name="status" value="nonaktif" id="status_nonaktif" {{ old('status') == 'nonaktif' ? 'checked' : '' }} style="display: none;">
+                                <div class="status-pill inactive" onclick="document.getElementById('status_nonaktif').click()">
                                     <i class="fa-solid fa-circle-xmark"></i> Nonaktif
                                 </div>
                             </label>
@@ -261,7 +380,18 @@ function previewImage(input) {
             content.style.display = 'none';
         }
         reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.style.display = 'none';
+        content.style.display = 'block';
     }
 }
+
+// Fix status pill radio button styling
+document.querySelectorAll('.status-pill').forEach(pill => {
+    pill.addEventListener('click', function() {
+        const radio = this.parentElement.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+    });
+});
 </script>
 @endsection
